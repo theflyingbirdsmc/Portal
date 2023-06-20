@@ -26,7 +26,7 @@ jobs:
       - name: Login to DockerHub
         uses: docker/login-action@v2
         with:
-          registry: ${{ secrets.MAVEN_DOCKER_REPO }}
+          registry: registry.theflyingbirds.net
           username: ${{ secrets.MAVEN_USERNAME }}
           password: ${{ secrets.MAVEN_PASSWORD }}
       - name: Push

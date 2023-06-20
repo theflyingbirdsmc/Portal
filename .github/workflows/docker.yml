@@ -30,7 +30,7 @@ jobs:
           password: ${{ secrets.MAVEN_PASSWORD }}
       - name: Push
         run: |
-        docker push ${{ secrets.MAVEN_DOCKER_REPO }}/backstage:latest
+          docker push ${{ secrets.MAVEN_DOCKER_REPO }}/backstage:latest
 
       # Login to Nexus Artifactory
       # - name: Login to Nexus Docker Registry

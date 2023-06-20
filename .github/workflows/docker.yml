@@ -24,8 +24,9 @@ jobs:
         run: yarn install --frozen-lockfile && yarn tsc && yarn build:backend
 
       - name: Login to DockerHub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
+          registry: ${{ secrets.MAVEN_DOCKER_REPO }}
           username: ${{ secrets.MAVEN_USERNAME }}
           password: ${{ secrets.MAVEN_PASSWORD }}
       - name: Push

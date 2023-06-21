@@ -1,0 +1,28 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:13.9-alpine
+    container_name: postgresql
+    environment:
+      - POSTGRES_DB=backstage
+      - POSTGRES_USER=backstage
+      - POSTGRES_PASSWORD=backstage123
+    ports:
+      - 5432:5432
+    volumes:
+      - ${ROOT_DATA_DIR}/var/data/postgres/data:/var/lib/postgresql/data
+      - /etc/localtime:/etc/localtime:ro
+    restart: always
+    network_mode: host
+  backstage:
+    image: registry.theflyingbirds.net/backstage:latest
+    container_name: tfb_backstage
+    ports:
+      - 7007:7007
+      - 3000:3000
+    environment:
+      - POSTGRES_HOST=127.0.0.1
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=backstage
+      - POSTGRES_PASSWORD=backstage123
+    network_mode: host

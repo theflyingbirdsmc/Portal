@@ -31,11 +31,7 @@ WORKDIR /app
 ENV NODE_ENV production
 
 ARG GITHUB_APP_PRIVATE_KEY
-ARG GITHUB_APP_WEBHOOK_SECRET
-ARG GITHUB_APP_CLIENT_SECRET
 ENV GITHUB_APP_PRIVATE_KEY=$GITHUB_APP_PRIVATE_KEY
-ENV GITHUB_APP_CLIENT_SECRET=$GITHUB_APP_CLIENT_SECRET
-ENV GITHUB_APP_WEBHOOK_SECRET=$GITHUB_APP_WEBHOOK_SECRET
 
 # Copy repo skeleton first, to avoid unnecessary docker cache invalidation.
 # The skeleton contains the package.json of each package in the monorepo,

@@ -38,7 +38,7 @@ integrations:
   github:
     - host: github.com
       apps:
-        - $include: github-app-tfb-backstage-credentials.yaml
+        - $include: ${GITHUB_APP_PRIVATE_KEY}
     ### Example for how to add your GitHub Enterprise instance using the API:
     # - host: ghe.example.net
     #   apiBaseUrl: https://ghe.example.net/api/v3

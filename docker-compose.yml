@@ -25,4 +25,5 @@ services:
       - POSTGRES_PORT=5432
       - POSTGRES_USER=backstage
       - POSTGRES_PASSWORD=backstage123
+      - GITHUB_APP_PRIVATE_KEY=-----BEGIN RSA PRIVATE KEY-----\n<your-private-key>\n-----END RSA PRIVATE KEY-----
     network_mode: host

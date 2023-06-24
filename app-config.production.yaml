@@ -34,6 +34,7 @@ auth:
       production:
         clientId: ${AUTH_GITHUB_CLIENT_ID}
         clientSecret: ${AUTH_GITHUB_CLIENT_SECRET}
+        callbackUrl: https://theflyingbirds.net/api/auth/github/handler/frame?env=production
 catalog:
   providers:
     github:

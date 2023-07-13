@@ -2,7 +2,7 @@ import { CatalogBuilder } from '@backstage/plugin-catalog-backend';
 import { ScaffolderEntitiesProcessor } from '@backstage/plugin-scaffolder-backend';
 import { Router } from 'express';
 import { PluginEnvironment } from '../types';
-import { GithubOrgEntityProvider, defaultUserTransformer } from '@backstage/plugin-catalog-backend-module-github';
+import { GithubEntityProvider, GithubMultiOrgEntityProvider, defaultUserTransformer } from '@backstage/plugin-catalog-backend-module-github';
 
 export default async function createPlugin(
   env: PluginEnvironment,
@@ -10,12 +10,25 @@ export default async function createPlugin(
   const builder = await CatalogBuilder.create(env);
   // The org URL below needs to match a configured integrations.github entry
   // specified in your app-config.
-  const githubOrgEntityProvider = GithubOrgEntityProvider.fromConfig(env.config, {
+  builder.addEntityProvider(
+    GithubEntityProvider.fromConfig(env.config, {
+      logger: env.logger,
+      // optional: alternatively, use scheduler with schedule defined in app-config.yaml
+      // schedule: env.scheduler.createScheduledTaskRunner({
+      //   frequency: { minutes: 30 },
+      //   timeout: { minutes: 3 },
+      // }),
+      // optional: alternatively, use schedule
+      scheduler: env.scheduler,
+    }),
+  );
+  const githubOrgEntityProvider = GithubMultiOrgEntityProvider.fromConfig(env.config, {
     id: 'production',
-    orgUrl: 'https://github.com/theflyingbirdsmc',
+    githubUrl: 'https://github.com',
+    orgs: ['theflyingbirdsmc'],
     logger: env.logger,
     schedule: env.scheduler.createScheduledTaskRunner({
-      frequency: { minutes: 60 },
+      frequency: { minutes: 2 },
       timeout: { minutes: 15 },
     }),
     userTransformer: async (user, ctx) => {

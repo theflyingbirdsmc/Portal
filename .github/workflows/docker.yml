@@ -1,11 +1,9 @@
 name: Build and Publish Flamecord Docker Image to Nexus Artifactory
 
 on:
-  pull_request:
+  push:
     branches:
       - main
-    types:
-      - closed
 
 jobs:
   build-test-publish:

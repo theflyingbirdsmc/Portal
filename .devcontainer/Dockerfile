@@ -15,7 +15,7 @@ RUN apt-get update \
     build-essential \
 	&& rm -rf /var/lib/apt/lists/*
 
-# Install NodeJS
+# Install NodeJS for Backstage development
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash - && \
     sudo apt-get install -y nodejs
 

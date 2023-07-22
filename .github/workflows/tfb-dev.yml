@@ -33,11 +33,7 @@ jobs:
         with:
           context: .devcontainer/ # specifying the directory where your Dockerfile is
           push: true
-          tags: ${{ secrets.MAVEN_DOCKER_REPO }}/tfb-dev:latest # change this to your image name
-          build-args: |
-            MAVEN_URL=${{ secrets.MAVEN_URL }}
-            MAVEN_USERNAME=${{ secrets.MAVEN_USERNAME }}
-            MAVEN_PASSWORD=${{ secrets.MAVEN_PASSWORD }}
+          tags: ${{ secrets.DOCKER_REGISTRY }}/backstage-dev:latest # change this to your image name
   cleanup:
     runs-on: ubuntu-latest
     steps:

@@ -1,4 +1,4 @@
-name: Build and Publish Flamecord Docker Image to Nexus Artifactory
+name: Build and Publish Backstage Production image
 
 on:
   push:

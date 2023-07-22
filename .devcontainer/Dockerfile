@@ -21,9 +21,7 @@ RUN curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash - && \
 
 EXPOSE 3000
 EXPOSE 7007
-# EXPOSE 3306
 
-# RUN sudo service mariadb start && sudo mysql -u root < /docker-entrypoint-initdb.d/init.sql
 ARG USER=coder
 RUN useradd --groups sudo --no-create-home --shell /bin/bash ${USER} \
 	&& echo "${USER} ALL=(ALL) NOPASSWD:ALL" >/etc/sudoers.d/${USER} \

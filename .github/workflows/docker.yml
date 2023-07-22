@@ -57,11 +57,11 @@ jobs:
       - name: Login to DockerHub
         uses: docker/login-action@v2
         with:
-          registry: registry.theflyingbirds.net
+          registry: ${{ secrets.DOCKER_REGISTRY }}
           username: ${{ secrets.MAVEN_USERNAME }}
           password: ${{ secrets.MAVEN_PASSWORD }}
       - name: Push
-        run: docker push registry.theflyingbirds.net/backstage:latest
+        run: docker push ${{ secrets.DOCKER_REGISTRY }}/backstage:latest
 
       # Login to Nexus Artifactory
       # - name: Login to Nexus Docker Registry

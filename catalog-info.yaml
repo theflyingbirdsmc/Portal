@@ -1,13 +1,18 @@
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: backstage
-  description: An example of a Backstage application.
-  # Example for optional annotations
+  name: Backstage
+  description: Backstage for TFB
+  # labels:
+  #   example.com/custom: custom_label_value
   # annotations:
-  #   github.com/project-slug: backstage/backstage
-  #   backstage.io/techdocs-ref: dir:.
+  #   example.com/service-discovery: artistweb
+  #   circleci.com/project-slug: github/example-org/artist-website
+  tags:
+    - backstage
 spec:
-  type: website
-  owner: john@example.com
+  type: service
   lifecycle: experimental
+  owner: theflyingbirdsmc/services
+  # system: eu
+  # domain: tfb-network

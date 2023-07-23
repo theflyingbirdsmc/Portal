@@ -12,6 +12,7 @@ RUN apt-get update \
     libsqlite3-dev \
     python3 \
     build-essential \
+	make \
 	&& rm -rf /var/lib/apt/lists/*
 
 # Install NodeJS for Backstage development

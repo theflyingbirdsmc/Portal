@@ -9,7 +9,6 @@ RUN apt-get update \
 	wget \
 	zip \ 
 	unzip \
-	node \
     libsqlite3-dev \
     python3 \
     build-essential \

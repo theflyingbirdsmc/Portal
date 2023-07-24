@@ -1,0 +1,93 @@
+name: Build and Publish Backstage Dev to Nexus
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.devcontainer/**'
+jobs:
+  build-test-publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Check out the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Set up Docker
+      - name: Set up Docker Build
+        uses: docker/setup-buildx-action@v2
+
+      # Login to Nexus Artifactory
+      - name: Login to Nexus Docker Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ secrets.DOCKER_REGISTRY }}
+          username: ${{ secrets.MAVEN_USERNAME }}
+          password: ${{ secrets.MAVEN_PASSWORD }}
+
+      # Build and push Docker image
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .devcontainer/ # specifying the directory where your Dockerfile is
+          push: true
+          tags: ${{ secrets.DOCKER_REGISTRY }}/backstage-dev:latest # change this to your image name
+        env:
+          TFB_APP_ID: ${{ secrets.TFB_APP_ID }}
+          TFB_APP_WEBHOOKURL: ${{ secrets.TFB_APP_WEBHOOKURL }}
+          TFB_APP_CLIENT_ID: ${{ secrets.TFB_APP_CLIENT_ID }}
+          TFB_APP_CLIENT_SECRET: ${{ secrets.TFB_APP_CLIENT_SECRET }}
+          TFB_APP_WEBHOOK_SECRET: ${{ secrets.TFB_APP_WEBHOOK_SECRET }}
+          TFB_APP_PRIVATE_KEY_0: ${{ secrets.TFB_APP_PRIVATE_KEY_0 }}
+          TFB_APP_PRIVATE_KEY_1: ${{ secrets.TFB_APP_PRIVATE_KEY_1 }}
+          TFB_APP_PRIVATE_KEY_2: ${{ secrets.TFB_APP_PRIVATE_KEY_2 }}
+          TFB_APP_PRIVATE_KEY_3: ${{ secrets.TFB_APP_PRIVATE_KEY_3 }}
+          TFB_APP_PRIVATE_KEY_4: ${{ secrets.TFB_APP_PRIVATE_KEY_4 }}
+          TFB_APP_PRIVATE_KEY_5: ${{ secrets.TFB_APP_PRIVATE_KEY_5 }}
+          TFB_APP_PRIVATE_KEY_6: ${{ secrets.TFB_APP_PRIVATE_KEY_6 }}
+          TFB_APP_PRIVATE_KEY_7: ${{ secrets.TFB_APP_PRIVATE_KEY_7 }}
+          TFB_APP_PRIVATE_KEY_8: ${{ secrets.TFB_APP_PRIVATE_KEY_8 }}
+          TFB_APP_PRIVATE_KEY_9: ${{ secrets.TFB_APP_PRIVATE_KEY_9 }}
+          TFB_APP_PRIVATE_KEY_10: ${{ secrets.TFB_APP_PRIVATE_KEY_10 }}
+          TFB_APP_PRIVATE_KEY_11: ${{ secrets.TFB_APP_PRIVATE_KEY_11 }}
+          TFB_APP_PRIVATE_KEY_12: ${{ secrets.TFB_APP_PRIVATE_KEY_12 }}
+          TFB_APP_PRIVATE_KEY_13: ${{ secrets.TFB_APP_PRIVATE_KEY_13 }}
+          TFB_APP_PRIVATE_KEY_14: ${{ secrets.TFB_APP_PRIVATE_KEY_14 }}
+          TFB_APP_PRIVATE_KEY_15: ${{ secrets.TFB_APP_PRIVATE_KEY_15 }}
+          TFB_APP_PRIVATE_KEY_16: ${{ secrets.TFB_APP_PRIVATE_KEY_16 }}
+          TFB_APP_PRIVATE_KEY_17: ${{ secrets.TFB_APP_PRIVATE_KEY_17 }}
+          TFB_APP_PRIVATE_KEY_18: ${{ secrets.TFB_APP_PRIVATE_KEY_18 }}
+          TFB_APP_PRIVATE_KEY_19: ${{ secrets.TFB_APP_PRIVATE_KEY_19 }}
+          TFB_APP_PRIVATE_KEY_20: ${{ secrets.TFB_APP_PRIVATE_KEY_20 }}
+          TFB_APP_PRIVATE_KEY_21: ${{ secrets.TFB_APP_PRIVATE_KEY_21 }}
+          TFB_APP_PRIVATE_KEY_22: ${{ secrets.TFB_APP_PRIVATE_KEY_22 }}
+          TFB_APP_PRIVATE_KEY_23: ${{ secrets.TFB_APP_PRIVATE_KEY_23 }}
+          TFB_APP_PRIVATE_KEY_24: ${{ secrets.TFB_APP_PRIVATE_KEY_24 }}
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+        
+      - name: Cleanup
+        run: |
+          gh extension install actions/gh-actions-cache
+          
+          REPO=${{ github.repository }}
+          BRANCH="refs/pull/${{ github.event.pull_request.number }}/merge"
+
+          echo "Fetching list of cache key"
+          cacheKeysForPR=$(gh actions-cache list -R $REPO -B $BRANCH | cut -f 1 )
+
+          ## Setting this to not fail the workflow while deleting cache keys. 
+          set +e
+          echo "Deleting caches..."
+          for cacheKey in $cacheKeysForPR
+          do
+              gh actions-cache delete $cacheKey -R $REPO -B $BRANCH --confirm
+          done
+          echo "Done"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} 

@@ -22,9 +22,9 @@ RUN npm install -g yarn
 EXPOSE 3000
 EXPOSE 7007
 
-ENV LOCAL_AUTH_GITHUB_CLIENT_ID
-ENV LOCAL_AUTH_GITHUB_CLIENT_SECRET
-ENV github-app-tfb-backstage
+# ENV LOCAL_AUTH_GITHUB_CLIENT_ID
+# ENV LOCAL_AUTH_GITHUB_CLIENT_SECRET
+# ENV github-app-tfb-backstage
 
 ARG USER=coder
 RUN useradd --groups sudo --no-create-home --shell /bin/bash ${USER} \

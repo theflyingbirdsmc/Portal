@@ -21,6 +21,10 @@ RUN curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash - && \
 EXPOSE 3000
 EXPOSE 7007
 
+ENV LOCAL_AUTH_GITHUB_CLIENT_ID
+ENV LOCAL_AUTH_GITHUB_CLIENT_SECRET
+ENV github-app-tfb-backstage
+
 ARG USER=coder
 RUN useradd --groups sudo --no-create-home --shell /bin/bash ${USER} \
 	&& echo "${USER} ALL=(ALL) NOPASSWD:ALL" >/etc/sudoers.d/${USER} \

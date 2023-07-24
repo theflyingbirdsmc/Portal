@@ -16,7 +16,7 @@ backend:
   listen:
     port: 7007
     # Uncomment the following host directive to bind to specific interfaces
-    # host: 127.0.0.1
+    host: localhost
   csp:
     connect-src: ["'self'", 'http:', 'https:', 'avatars.githubusercontent.com']
     # Content-Security-Policy directives follow the Helmet format: https://helmetjs.github.io/#reference
@@ -71,6 +71,7 @@ auth:
       development:
         clientId: ${LOCAL_AUTH_GITHUB_CLIENT_ID}
         clientSecret: ${LOCAL_AUTH_GITHUB_CLIENT_SECRET}
+        callbackUrl: http://localhost:7007/api/auth/github/handler/frame
 catalog:
   providers:
     github:

@@ -12,12 +12,13 @@ RUN apt-get update \
     libsqlite3-dev \
     python3 \
     build-essential \
+	make \
 	&& rm -rf /var/lib/apt/lists/*
 
 # Install NodeJS for Backstage development
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash - && \
     sudo apt-get install -y nodejs
-
+RUN npm install -g yarn
 EXPOSE 3000
 EXPOSE 7007
 

@@ -19,12 +19,9 @@ RUN apt-get update \
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash - && \
     sudo apt-get install -y nodejs
 RUN npm install -g yarn
+
 EXPOSE 3000
 EXPOSE 7007
-
-# ENV LOCAL_AUTH_GITHUB_CLIENT_ID
-# ENV LOCAL_AUTH_GITHUB_CLIENT_SECRET
-# ENV github-app-tfb-backstage
 
 ARG USER=coder
 RUN useradd --groups sudo --no-create-home --shell /bin/bash ${USER} \

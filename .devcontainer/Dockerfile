@@ -15,7 +15,7 @@ RUN apt-get update \
 	make \
 	&& rm -rf /var/lib/apt/lists/*
 
-# Install NodeJS for Backstage development
+# Install NodeJS for Backstage development.
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash - && \
     sudo apt-get install -y nodejs
 RUN npm install -g yarn

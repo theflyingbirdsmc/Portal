@@ -5,9 +5,8 @@ metadata:
   description: Backstage for TFB
   # labels:
   #   example.com/custom: custom_label_value
-  # annotations:
-  #   example.com/service-discovery: artistweb
-  #   circleci.com/project-slug: github/example-org/artist-website
+  annotations:
+    'backstage.io/kubernetes-namespace': tfb-backend
   tags:
     - backstage
 spec:

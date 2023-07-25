@@ -123,3 +123,16 @@ catalog:
     #   target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/acme-corp.yaml
     #   rules:
     #     - allow: [User, Group]
+# kubernetes:
+#   serviceLocatorMethod:
+#     type: 'multiTenant'
+#   clusterLocatorMethods:
+#     - type: 'config'
+#       clusters:
+#         - url: https://rancher.theflyingbirds.net/k8s/clusters/local
+#           name: eagle
+#           authProvider: 'default'
+#           skipTLSVerify: false
+#           skipMetricsLookup: true
+#           serviceAccountToken: ${RANCHER_TOKEN}
+#           dashboardUrl: https://rancher.theflyingbirds.net # url copied from running the command: minikube service kubernetes-dashboard -n kubernetes-dashboard

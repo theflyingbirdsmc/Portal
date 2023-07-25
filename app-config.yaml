@@ -130,7 +130,7 @@ kubernetes:
     - type: 'config'
       clusters:
         - url: https://rancher.theflyingbirds.net/k8s/clusters/local
-          name: rke2
+          name: local
           authProvider: 'serviceAccount'
           skipTLSVerify: false
           skipMetricsLookup: true

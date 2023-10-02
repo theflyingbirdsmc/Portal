@@ -7,6 +7,7 @@ metadata:
   #   example.com/custom: custom_label_value
   annotations:
     backstage.io/kubernetes-namespace: coder
+    backstage.io/kubernetes-id: coder
   tags:
     - backstage
 spec:

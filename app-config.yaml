@@ -129,11 +129,11 @@ kubernetes:
   clusterLocatorMethods:
     - type: 'config'
       clusters:
-        - url: https://rancher.theflyingbirds.net/k8s/clusters/local
-          name: rke2
+        - url: https://95.216.4.245:16443
+          name: microk8s
           authProvider: 'serviceAccount'
-          skipTLSVerify: false
+          skipTLSVerify: true
           skipMetricsLookup: true
-          serviceAccountToken: ${RANCHER_TOKEN}
-          dashboardApp: rancher
-          dashboardUrl: https://rancher.theflyingbirds.net # url copied from running the command: minikube service kubernetes-dashboard -n kubernetes-dashboard
+          serviceAccountToken: ${BAC_BOT_TOKEN}
+          dashboardApp: standard
+          dashboardUrl: https://95.216.4.245:16443 # url copied from running the command: minikube service kubernetes-dashboard -n kubernetes-dashboard

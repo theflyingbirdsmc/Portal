@@ -15,7 +15,7 @@ services:
     restart: always
     network_mode: host
   backstage:
-    image: registry.theflyingbirds.net/backstage:latest
+    image: docker.theflyingbirds.net/backstage:latest
     container_name: tfb_backstage
     ports:
       - 7007:7007

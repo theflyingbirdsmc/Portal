@@ -30,7 +30,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
-          context: .devcontainer/ # specifying the directory where your Dockerfile is
+          context: packages/backend # specifying the directory where your Dockerfile is
           push: true
           tags: ${{ secrets.DOCKER_REGISTRY }}/backstage:latest # change this to your image name
           build-args: |

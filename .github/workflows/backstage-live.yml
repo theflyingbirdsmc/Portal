@@ -38,6 +38,8 @@ jobs:
             ENV POSTGRES_USER=backstage
             ENV POSTGRES_PORT=5432
             ENV POSTGRES_PASSWORD=backstage123
+            AUTH_GITHUB_CLIENT_ID=${{ secrets.AUTH_GITHUB_CLIENT_ID }}
+            AUTH_GITHUB_CLIENT_SECRET=${{ secrets.AUTH_GITHUB_CLIENT_SECRET }}
             TFB_APP_ID=${{ secrets.TFB_APP_ID }}
             TFB_APP_WEBHOOKURL=${{ secrets.TFB_APP_WEBHOOKURL }}
             TFB_APP_CLIENT_ID=${{ secrets.TFB_APP_CLIENT_ID }}

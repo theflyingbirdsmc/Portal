@@ -1,11 +1,10 @@
-name: Backstage Dev
+name: Backstage Live
 
 on:
   push:
     branches:
       - main
-    paths:
-      - '.devcontainer/**'
+
 jobs:
   build-test-publish:
     runs-on: ubuntu-latest
@@ -19,8 +18,8 @@ jobs:
       - name: Set up Docker Build
         uses: docker/setup-buildx-action@v2
 
-      # Login to Nexus Artifactory
-      - name: Login to Nexus Docker Registry
+      # Login to docker registry
+      - name: Login to Docker Registry
         uses: docker/login-action@v2
         with:
           registry: ${{ secrets.DOCKER_REGISTRY }}
@@ -33,8 +32,12 @@ jobs:
         with:
           context: .devcontainer/ # specifying the directory where your Dockerfile is
           push: true
-          tags: ${{ secrets.DOCKER_REGISTRY }}/backstage-dev:latest # change this to your image name
+          tags: ${{ secrets.DOCKER_REGISTRY }}/backstage:latest # change this to your image name
           build-args: |
+            ENV POSTGRES_HOST=postgres
+            ENV POSTGRES_USER=backstage
+            ENV POSTGRES_PORT=5432
+            ENV POSTGRES_PASSWORD=backstage123
             TFB_APP_ID=${{ secrets.TFB_APP_ID }}
             TFB_APP_WEBHOOKURL=${{ secrets.TFB_APP_WEBHOOKURL }}
             TFB_APP_CLIENT_ID=${{ secrets.TFB_APP_CLIENT_ID }}
@@ -65,29 +68,28 @@ jobs:
             TFB_APP_PRIVATE_KEY_22=${{ secrets.TFB_APP_PRIVATE_KEY_22 }}
             TFB_APP_PRIVATE_KEY_23=${{ secrets.TFB_APP_PRIVATE_KEY_23 }}
             TFB_APP_PRIVATE_KEY_24=${{ secrets.TFB_APP_PRIVATE_KEY_24 }}
-  cleanup:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v3
-        
-      - name: Cleanup
-        run: |
-          gh extension install actions/gh-actions-cache
-          
-          REPO=${{ github.repository }}
-          BRANCH="refs/pull/${{ github.event.pull_request.number }}/merge"
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ secrets.DOCKER_REGISTRY }}
+          username: ${{ secrets.MAVEN_USERNAME }}
+          password: ${{ secrets.MAVEN_PASSWORD }}
+      - name: Push
+        run: docker push ${{ secrets.DOCKER_REGISTRY }}/backstage:latest
 
-          echo "Fetching list of cache key"
-          cacheKeysForPR=$(gh actions-cache list -R $REPO -B $BRANCH | cut -f 1 )
+      # Login to Nexus Artifactory
+      # - name: Login to Nexus Docker Registry
+      #   uses: docker/login-action@v2
+      #   with:
+      #     registry: ${{ secrets.MAVEN_DOCKER_REPO }} # change this to your Nexus Registry URL
+      #     username: ${{ secrets.MAVEN_USERNAME }}
+      #     password: ${{ secrets.MAVEN_PASSWORD }}
 
-          ## Setting this to not fail the workflow while deleting cache keys. 
-          set +e
-          echo "Deleting caches..."
-          for cacheKey in $cacheKeysForPR
-          do
-              gh actions-cache delete $cacheKey -R $REPO -B $BRANCH --confirm
-          done
-          echo "Done"
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+      # # Build and push Docker image
+      # - name: Build and push Docker image
+      #   uses: docker/build-push-action@v4
+      #   with:
+      #     context: ./packages/backend # specifying the directory where your Dockerfile is
+      #     file: ./packages/backend/Dockerfile # specifying the path to your Dockerfile
+      #     push: true
+      #     tags: ${{ secrets.MAVEN_DOCKER_REPO }}/backstage:latest # change this to your image name

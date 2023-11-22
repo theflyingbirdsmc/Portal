@@ -35,6 +35,8 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_REGISTRY }}/backstage-dev:latest # change this to your image name
           build-args: |
+            BACKEND_SECRET=${{ secrets.BACKEND_SECRET }}
+            BAC_BOT_TOKEN=${{ secrets.BAC_BOT_TOKEN }}
             TFB_APP_ID=${{ secrets.TFB_APP_ID }}
             TFB_APP_WEBHOOKURL=${{ secrets.TFB_APP_WEBHOOKURL }}
             TFB_APP_CLIENT_ID=${{ secrets.TFB_APP_CLIENT_ID }}

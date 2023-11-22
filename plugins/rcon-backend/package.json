@@ -31,7 +31,8 @@
     "winston": "^3.2.1",
     "node-fetch": "^2.6.7",
     "yn": "^4.0.0",
-    "rcon": "^1.1.0"
+    "rcon": "^1.1.0",
+    "@kubernetes/client-node": "^0.20.0"
   },
   "devDependencies": {
     "@backstage/cli": "^0.23.1",

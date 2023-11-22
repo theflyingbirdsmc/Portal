@@ -1,8 +1,9 @@
 import { errorHandler } from '@backstage/backend-common';
-import express from 'express';
+import express, { response } from 'express';
 import Router from 'express-promise-router';
 import { Logger } from 'winston';
 var Rcon = require('rcon');
+const k8s = require('@kubernetes/client-node');
 
 export interface RouterOptions {
   logger: Logger;
@@ -48,6 +49,29 @@ export async function createRouter(
     // If you try to send a command here, it will fail since the connection isn't
     // authenticated yet. Wait for the 'auth' event.
   });
+
+  router.get('/logs', (_, response) => {
+
+
+    const kc = new k8s.KubeConfig();
+    kc.loadFromDefault();
+
+    const k8sApi = kc.makeApiClient(k8s.CoreV1Api);
+
+    const main = async () => {
+      try {
+        // const podsRes = await k8sApi.listNamespacedPod('coder-fuglen');
+        const podName = 'lobby-0';
+        const { response, body } = await k8sApi.readNamespacedPodLog(podName, "tfb-servers");
+        console.log(body);
+        // console.log(podsRes.body);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    main();
+  })
   router.use(errorHandler());
   return router;
 }

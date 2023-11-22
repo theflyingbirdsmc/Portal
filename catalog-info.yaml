@@ -6,7 +6,6 @@ metadata:
   # labels:
   #   example.com/custom: custom_label_value
   annotations:
-    backstage.io/kubernetes-namespace: tfb-backend
     backstage.io/kubernetes-id: backstage
   tags:
     - backstage

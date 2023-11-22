@@ -1,5 +1,5 @@
 import { errorHandler } from '@backstage/backend-common';
-import express, { response } from 'express';
+import express from 'express';
 import Router from 'express-promise-router';
 import { Logger } from 'winston';
 var Rcon = require('rcon');
@@ -62,8 +62,9 @@ export async function createRouter(
       try {
         // const podsRes = await k8sApi.listNamespacedPod('coder-fuglen');
         const podName = 'lobby-0';
-        const { response, body } = await k8sApi.readNamespacedPodLog(podName, "tfb-servers");
+        const { body } = await k8sApi.readNamespacedPodLog(podName, "tfb-servers");
         console.log(body);
+        response.json(body)
         // console.log(podsRes.body);
       } catch (err) {
         console.error(err);

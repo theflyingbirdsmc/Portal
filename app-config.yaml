@@ -92,21 +92,20 @@ catalog:
           frequency: { minutes: 2 }
           # supports ISO duration, "human duration" as used in code
           timeout: { minutes: 3 }
-  # import:
+  import:
   #   entityFilename: catalog-info.yaml
   #   pullRequestBranchName: backstage-integration
-  # rules:
-  #   - allow: [Component, System, API, Resource, Location]
-  # locations:
+  rules:
+    - allow: [Component, System, API, Resource, Location, Template]
+  locations:
   #   # Local example data, file locations are relative to the backend process, typically `packages/backend`
   #   - type: file
   #     target: ../../examples/entities.yaml
 
-  #   # Local example template
-  #   - type: file
-  #     target: ../../examples/template/template.yaml
-  #     rules:
-  #       - allow: [Template]
+    - type: file
+      target: /home/coder/Backstage/template/template.yaml
+      rules:
+        - allow: [Template]
 
   #   # Local example organizational data
   #   - type: file

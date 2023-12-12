@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { LogViewer } from '@backstage/core-components';
 // import { fetchEventSource } from '@microsoft/fetch-event-source';
-const { Client } = require('ssh2');
-const conn = new Client();
+// const { Client } = require('ssh2');
+// const conn = new Client();
 
 // const exampleLog =
 //   `  \u001b[37m[21:51:29 \u001b[31mERROR\u001b[37m]: [PlaceholderAPI] Failed to load expansion Expansion-LuckPerms-5.4.jar, as it does not have a class which extends PlaceholderExpansion\u001b[0m
@@ -42,24 +42,24 @@ const conn = new Client();
 
 export const ConsoleFetchComponent = () => {
 
-  conn.on('ready', () => {
-    console.log('Client :: ready');
-    conn.shell((err: any, stream: any) => {
-      if (err) throw err;
-      stream.on('close', () => {
-        console.log('Stream :: close');
-        conn.end();
-      }).on('data', (data: any) => {
-        console.log('OUTPUT: ' + data);
-      });
-      stream.end('ls -l\nexit\n');
-    });
-  }).connect({
-    host: '10.1.123.29',
-    port: 22,
-    username: 'tfb',
-    password: 'TFB123'
-  });
+  // conn.on('ready', () => {
+  //   console.log('Client :: ready');
+  //   conn.shell((err: any, stream: any) => {
+  //     if (err) throw err;
+  //     stream.on('close', () => {
+  //       console.log('Stream :: close');
+  //       conn.end();
+  //     }).on('data', (data: any) => {
+  //       console.log('OUTPUT: ' + data);
+  //     });
+  //     stream.end('ls -l\nexit\n');
+  //   });
+  // }).connect({
+  //   host: '10.1.123.29',
+  //   port: 22,
+  //   username: 'tfb',
+  //   password: 'TFB123'
+  // });
 
   // const [logs, setLogs] = useState('');
 

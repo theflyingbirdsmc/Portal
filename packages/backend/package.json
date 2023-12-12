@@ -40,11 +40,11 @@
     "@backstage/plugin-techdocs-backend": "^1.8.0",
     "@roadiehq/scaffolder-backend-module-utils": "^1.10.5",
     "app": "link:../app",
-    "backstage-plugin-rcon-backend": "^0.1.0",
+    "backstage-plugin-console-backend": "^0.1.0",
     "better-sqlite3": "^8.0.0",
+    "compression": "^1.7.4",
     "dockerode": "^3.3.1",
     "express": "^4.17.1",
-    "compression": "^1.7.4",
     "express-promise-router": "^4.1.0",
     "pg": "^8.3.0",
     "winston": "^3.2.1"

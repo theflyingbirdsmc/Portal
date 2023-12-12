@@ -1,4 +1,4 @@
-import { createRouter } from 'backstage-plugin-rcon-backend';
+import { createRouter } from 'backstage-plugin-console-backend';
 import { Router } from 'express';
 import { PluginEnvironment } from '../types';
 

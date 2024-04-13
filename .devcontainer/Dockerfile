@@ -15,9 +15,10 @@ RUN apt-get update \
 	&& rm -rf /var/lib/apt/lists/*
 
 # Install NodeJS for Backstage development.
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash - && \
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash - && \
     sudo apt-get install -y nodejs
 RUN npm install -g yarn
+RUN yarn add npkill -W
 
 ARG POSTGRES_HOST
 ARG POSTGRES_USER

@@ -25,6 +25,8 @@ import {
   isKind,
   hasCatalogProcessingErrors,
   isOrphan,
+  hasRelationWarnings,
+  EntityRelationWarning,
 } from '@backstage/plugin-catalog';
 import {
   isGithubActionsAvailable,
@@ -55,7 +57,6 @@ import {
 
 import { TechDocsAddons } from '@backstage/plugin-techdocs-react';
 import { ReportIssue } from '@backstage/plugin-techdocs-module-addons-contrib';
-import { EntityKubernetesContent } from '@backstage/plugin-kubernetes';
 
 const techdocsContent = (
   <EntityTechdocsContent>
@@ -98,6 +99,14 @@ const entityWarningContent = (
       <EntitySwitch.Case if={isOrphan}>
         <Grid item xs={12}>
           <EntityOrphanWarning />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
+
+    <EntitySwitch>
+      <EntitySwitch.Case if={hasRelationWarnings}>
+        <Grid item xs={12}>
+          <EntityRelationWarning />
         </Grid>
       </EntitySwitch.Case>
     </EntitySwitch>
@@ -165,9 +174,6 @@ const serviceEntityPage = (
 
     <EntityLayout.Route path="/docs" title="Docs">
       {techdocsContent}
-    </EntityLayout.Route>
-    <EntityLayout.Route path="/kubernetes" title="Kubernetes">
-      <EntityKubernetesContent refreshIntervalMs={30000} />
     </EntityLayout.Route>
   </EntityLayout>
 );
@@ -294,8 +300,11 @@ const groupPage = (
         <Grid item xs={12} md={6}>
           <EntityOwnershipCard variant="gridItem" />
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} md={6}>
           <EntityMembersListCard />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <EntityLinksCard />
         </Grid>
       </Grid>
     </EntityLayout.Route>

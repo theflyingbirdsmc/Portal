@@ -1,5 +1,5 @@
 app:
-  title: Scaffolded Backstage App
+  title: TFB Portal
   baseUrl: http://localhost:3000
 
 organization:
@@ -31,8 +31,6 @@ backend:
   database:
     client: better-sqlite3
     connection: ':memory:'
-  cache:
-    store: memory
   # workingDirectory: /tmp # Use this to configure a working directory for the scaffolder, defaults to the OS temp-dir
 
 integrations:
@@ -48,9 +46,10 @@ integrations:
 proxy:
   ### Example for how to add a proxy endpoint for the frontend.
   ### A typical reason to do this is to handle HTTPS and CORS for internal services.
-  # '/test':
-  #   target: 'https://example.com'
-  #   changeOrigin: true
+  # endpoints:
+  #   '/test':
+  #     target: 'https://example.com'
+  #     changeOrigin: true
 
 # Reference documentation http://backstage.io/docs/features/techdocs/configuration
 # Note: After experimenting with basic setup, use CI/CD to generate docs
@@ -89,7 +88,7 @@ catalog:
           repository: '.*' # Regex
         schedule: # optional; same options as in TaskScheduleDefinition
           # supports cron, ISO duration, "human duration" as used in code
-          frequency: { minutes: 2 }
+          frequency: { minutes: 5 }
           # supports ISO duration, "human duration" as used in code
           timeout: { minutes: 3 }
   import:

@@ -1,17 +1,13 @@
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: Backstage
-  description: Backstage for TFB
-  # labels:
-  #   example.com/custom: custom_label_value
-  annotations:
-    backstage.io/kubernetes-id: backstage
-  tags:
-    - backstage
+  name: portal
+  description: TFB Developer Portal
+  # Example for optional annotations
+  # annotations:
+  #   github.com/project-slug: backstage/backstage
+  #   backstage.io/techdocs-ref: dir:.
 spec:
-  type: service
+  type: website
+  owner: theflyingbirds1@gmail.com
   lifecycle: experimental
-  owner: theflyingbirdsmc/services
-  # system: eu
-  # domain: tfb-network

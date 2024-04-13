@@ -1,40 +1,41 @@
-import { legacyPlugin } from '@backstage/backend-common';
+/*
+ * Hi!
+ *
+ * Note that this is an EXAMPLE Backstage backend. Please check the README.
+ *
+ * Happy hacking!
+ */
+
 import { createBackend } from '@backstage/backend-defaults';
-import { coreServices, createBackendModule } from '@backstage/backend-plugin-api';
-import { scaffolderActionsExtensionPoint } from '@backstage/plugin-scaffolder-node/alpha';
-import { createSleepAction } from '@roadiehq/scaffolder-backend-module-utils';
-
-const scaffolderModuleCustomExtensions = createBackendModule({
-    pluginId: 'scaffolder', // name of the plugin that the module is targeting
-    moduleId: 'customExtensions',
-    register(env) {
-        env.registerInit({
-            deps: {
-                scaffolder: scaffolderActionsExtensionPoint,
-                config: coreServices.rootConfig,
-                reader: coreServices.urlReader,
-            },
-            init({ scaffolder, config, reader /* ..., other dependencies */ }) {
-                scaffolder.addActions(
-                    createSleepAction(),
-                );
-                return Promise.resolve();
-            },
-        });
-    },
-});
-
 
 const backend = createBackend();
+
 backend.add(import('@backstage/plugin-app-backend/alpha'));
+backend.add(import('@backstage/plugin-proxy-backend/alpha'));
 backend.add(import('@backstage/plugin-scaffolder-backend/alpha'));
-backend.add(legacyPlugin('auth', import('./plugins/auth')));
-backend.add(legacyPlugin('proxy', import('./plugins/proxy')));
-backend.add(legacyPlugin('console', import('./plugins/console')));
-backend.add(legacyPlugin('search', import('./plugins/search')));
-backend.add(legacyPlugin('catalog', import('./plugins/catalog')))
-backend.add(legacyPlugin('techdocs', import('./plugins/techdocs')));
-backend.add(legacyPlugin('kubernetes', import('./plugins/kubernetes')));
-backend.add(scaffolderModuleCustomExtensions());
+backend.add(import('@backstage/plugin-techdocs-backend/alpha'));
+
+// auth plugin
+backend.add(import('@backstage/plugin-auth-backend'));
+// See https://backstage.io/docs/backend-system/building-backends/migrating#the-auth-plugin
+backend.add(import('@backstage/plugin-auth-backend-module-guest-provider'));
+// See https://github.com/backstage/backstage/blob/master/docs/auth/guest/provider.md
+
+// catalog plugin
+backend.add(import('@backstage/plugin-catalog-backend/alpha'));
+backend.add(
+  import('@backstage/plugin-catalog-backend-module-scaffolder-entity-model'),
+);
+
+// permission plugin
+backend.add(import('@backstage/plugin-permission-backend/alpha'));
+backend.add(
+  import('@backstage/plugin-permission-backend-module-allow-all-policy'),
+);
+
+// search plugin
+backend.add(import('@backstage/plugin-search-backend/alpha'));
+backend.add(import('@backstage/plugin-search-backend-module-catalog/alpha'));
+backend.add(import('@backstage/plugin-search-backend-module-techdocs/alpha'));
 
 backend.start();

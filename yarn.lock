@@ -2861,6 +2861,31 @@
     "@react-hookz/web" "^24.0.0"
     "@types/react" "^16.13.1 || ^17.0.0 || ^18.0.0"
 
+"@backstage/plugin-catalog-backend-module-github@^0.5.7":
+  version "0.5.7"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-catalog-backend-module-github/-/plugin-catalog-backend-module-github-0.5.7.tgz#ea8efca21a677192a5111c0daf25381187f96f87"
+  integrity sha512-PTychwwfPGA8VkeAKKz5fnzddW1UpEYHbhws5ojgMAruzrj+v1m5vJEjWoKLLWMfVBko9ZSf+bme8V6j/EHOoQ==
+  dependencies:
+    "@backstage/backend-common" "^0.21.6"
+    "@backstage/backend-plugin-api" "^0.6.16"
+    "@backstage/backend-tasks" "^0.5.21"
+    "@backstage/catalog-client" "^1.6.3"
+    "@backstage/catalog-model" "^1.4.5"
+    "@backstage/config" "^1.2.0"
+    "@backstage/integration" "^1.9.1"
+    "@backstage/plugin-catalog-backend" "^1.21.0"
+    "@backstage/plugin-catalog-common" "^1.0.22"
+    "@backstage/plugin-catalog-node" "^1.11.0"
+    "@backstage/plugin-events-node" "^0.3.2"
+    "@octokit/graphql" "^5.0.0"
+    "@octokit/rest" "^19.0.3"
+    git-url-parse "^14.0.0"
+    lodash "^4.17.21"
+    minimatch "^9.0.0"
+    node-fetch "^2.6.7"
+    uuid "^9.0.0"
+    winston "^3.2.1"
+
 "@backstage/plugin-catalog-backend-module-scaffolder-entity-model@^0.1.14":
   version "0.1.14"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-catalog-backend-module-scaffolder-entity-model/-/plugin-catalog-backend-module-scaffolder-entity-model-0.1.14.tgz#1f2b291df2ca7e18ae648e69b7d14ed141b517ea"
@@ -3052,6 +3077,30 @@
     pluralize "^8.0.0"
     react-use "^17.2.4"
     zen-observable "^0.10.0"
+
+"@backstage/plugin-events-backend-module-github@^0.2.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-events-backend-module-github/-/plugin-events-backend-module-github-0.2.2.tgz#3a63496836b875d6361c94a31519f76f1c041413"
+  integrity sha512-nSKIdKxTLk0PEjuMo7MsHHoqIiI4Rf7GLrh93c7IaSBYMw3e3RZWU10KdVXj+/25NNENbFYK+EFOJ3+QtG98iw==
+  dependencies:
+    "@backstage/backend-plugin-api" "^0.6.16"
+    "@backstage/config" "^1.2.0"
+    "@backstage/plugin-events-node" "^0.3.2"
+    "@octokit/webhooks-methods" "^3.0.0"
+
+"@backstage/plugin-events-backend@^0.3.3":
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-events-backend/-/plugin-events-backend-0.3.3.tgz#12eecd2558da52927f17dcabedae683560c0ab21"
+  integrity sha512-nnBgVoAtVuM1jfq4qvVVncK7Kwr6cQw/dVUOrO88CgI/0LoCnQ/bUMG6Xn9fja3oDS+xnwZNtTyAHDsjR5R/QQ==
+  dependencies:
+    "@backstage/backend-common" "^0.21.6"
+    "@backstage/backend-plugin-api" "^0.6.16"
+    "@backstage/config" "^1.2.0"
+    "@backstage/plugin-events-node" "^0.3.2"
+    "@types/express" "^4.17.6"
+    express "^4.17.1"
+    express-promise-router "^4.1.0"
+    winston "^3.2.1"
 
 "@backstage/plugin-events-node@^0.3.2":
   version "0.3.2"
@@ -8642,9 +8691,9 @@
     "@types/react" "*"
 
 "@types/react@*", "@types/react@^16.13.1 || ^17.0.0", "@types/react@^16.13.1 || ^17.0.0 || ^18.0.0", "@types/react@^18":
-  version "18.2.77"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-18.2.77.tgz#af2f857b6a6dfb6ca89ec102ebc147b1f1616880"
-  integrity sha512-CUT9KUUF+HytDM7WiXKLF9qUSg4tGImwy4FXTlfEDPEkkNUzJ7rVFolYweJ9fS1ljoIaP7M7Rdjc5eUm/Yu5AA==
+  version "18.2.78"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-18.2.78.tgz#94aec453d0ccca909998a2b4b2fd78af15a7d2fe"
+  integrity sha512-qOwdPnnitQY4xKlKayt42q5W5UQrSHjgoXNVEtxeqdITJ99k4VXJOP3vt8Rkm9HmgJpH50UNU+rlqfkfWOqp0A==
   dependencies:
     "@types/prop-types" "*"
     csstype "^3.0.2"

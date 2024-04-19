@@ -1,1 +1,0 @@
-export { ConsoleComponent } from './ConsoleComponent';

@@ -46,7 +46,6 @@ const app = createApp({
       <SignInPage
         {...props}
         providers={[
-          'guest',
           {
             id: 'github-auth-provider',
             title: 'GitHub',

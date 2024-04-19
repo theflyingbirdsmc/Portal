@@ -12,13 +12,15 @@ backend:
   # The listener can also be expressed as a single <host>:<port> string. In this case we bind to
   # all interfaces, the most permissive setting. The right value depends on your specific deployment.
   listen: ':7007'
-
+  auth:
+    keys:
+    - secret: ${BACKEND_SECRET}
   # config options: https://node-postgres.com/api/client
   database:
     client: pg
     connection:
       host: ${POSTGRES_HOST}
-      port: ${POSTGRES_PORT}
+      port: 5432
       user: ${POSTGRES_USER}
       password: ${POSTGRES_PASSWORD}
       # https://node-postgres.com/features/ssl
@@ -28,12 +30,31 @@ backend:
       #   ca: # if you have a CA file and want to verify it you can uncomment this section
       #     $file: <file-path>/ca/server.crt
 
+integrations:
+  github:
+    - host: github.com
+      apps:
+        - $include: github-app-tfb-backstage-credentials.yaml
 auth:
+  environment: production
   providers:
-    guest: null
-
+    github:
+      production:
+        clientId: ${AUTH_GITHUB_CLIENT_ID}
+        clientSecret: ${AUTH_GITHUB_CLIENT_SECRET}
+        # callbackUrl: https://backstage.theflyingbirds.net/api/auth/github/handler/frame
 catalog:
-  # Overrides the default list locations from app-config.yaml as these contain example data.
-  # See https://backstage.io/docs/features/software-catalog/#adding-components-to-the-catalog for more details
-  # on how to get entities into the catalog.
-  locations: []
+  providers:
+    github:
+      # the provider ID can be any camelCase string
+      providerId:
+        organization: 'theflyingbirdsmc' # string
+        catalogPath: '/**/catalog-info.yaml' # string
+        filters:
+          branch: 'main' # string
+          repository: '.*' # Regex
+        schedule: # optional; same options as in TaskScheduleDefinition
+          # supports cron, ISO duration, "human duration" as used in code
+          frequency: { minutes: 20 }
+          # supports ISO duration, "human duration" as used in code
+          timeout: { minutes: 3 }

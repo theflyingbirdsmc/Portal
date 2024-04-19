@@ -1,5 +1,5 @@
 app:
-  title: Scaffolded Backstage App
+  title: TFB Portal
   baseUrl: http://localhost:3000
 
 organization:
@@ -9,9 +9,10 @@ backend:
   # Used for enabling authentication, secret is shared by all backend plugins
   # See https://backstage.io/docs/auth/service-to-service-auth for
   # information on the format
-  # auth:
-  #   keys:
-  #     - secret: ${BACKEND_SECRET}
+  auth:
+    keys:
+      - secret: T27lZHxSxbiqkityN3BhW8m8WohbFqWH
+    dangerouslyDisableDefaultAuthPolicy: true
   baseUrl: http://localhost:7007
   listen:
     port: 7007
@@ -31,8 +32,6 @@ backend:
   database:
     client: better-sqlite3
     connection: ':memory:'
-  cache:
-    store: memory
   # workingDirectory: /tmp # Use this to configure a working directory for the scaffolder, defaults to the OS temp-dir
 
 integrations:
@@ -48,9 +47,10 @@ integrations:
 proxy:
   ### Example for how to add a proxy endpoint for the frontend.
   ### A typical reason to do this is to handle HTTPS and CORS for internal services.
-  # '/test':
-  #   target: 'https://example.com'
-  #   changeOrigin: true
+  # endpoints:
+  #   '/test':
+  #     target: 'https://example.com'
+  #     changeOrigin: true
 
 # Reference documentation http://backstage.io/docs/features/techdocs/configuration
 # Note: After experimenting with basic setup, use CI/CD to generate docs
@@ -72,11 +72,9 @@ auth:
       development:
         clientId: ${LOCAL_AUTH_GITHUB_CLIENT_ID}
         clientSecret: ${LOCAL_AUTH_GITHUB_CLIENT_SECRET}
-        # callbackUrl: http://localhost:7007/api/auth/github/handler/frame
-      # production:
-      #   clientId: ${AUTH_GITHUB_CLIENT_ID}
-      #   clientSecret: ${AUTH_GITHUB_CLIENT_SECRET}
-      #   callbackUrl: https://backstage.theflyingbirds.net/api/auth/github/handler/frame
+        signIn:
+          resolvers:
+            - resolver: usernameMatchingUserEntityName
 catalog:
   providers:
     github:
@@ -89,7 +87,7 @@ catalog:
           repository: '.*' # Regex
         schedule: # optional; same options as in TaskScheduleDefinition
           # supports cron, ISO duration, "human duration" as used in code
-          frequency: { minutes: 2 }
+          frequency: { minutes: 5 }
           # supports ISO duration, "human duration" as used in code
           timeout: { minutes: 3 }
   import:
@@ -122,6 +120,10 @@ catalog:
     #   target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/acme-corp.yaml
     #   rules:
     #     - allow: [User, Group]
+events:
+  http:
+    topics:
+      - github
 kubernetes:
   serviceLocatorMethod:
     type: 'multiTenant'

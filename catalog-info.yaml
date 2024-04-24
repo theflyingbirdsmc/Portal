@@ -3,9 +3,8 @@ kind: Component
 metadata:
   name: Portal
   description: TFB Portal
-  # Example for optional annotations
-  # annotations:
-  #   github.com/project-slug: backstage/backstage
+  annotations:
+    github.com/project-slug: theflyingbirdsmc/portal
   #   backstage.io/techdocs-ref: dir:.
 spec:
   type: website

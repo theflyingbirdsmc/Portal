@@ -35,6 +35,8 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_REGISTRY }}/backstage-dev:latest # change this to your image name
           build-args: |
+            LOCAL_AUTH_GITHUB_CLIENT_ID=${{secrets.LOCAL_AUTH_GITHUB_CLIENT_ID}}
+            LOCAL_AUTH_GITHUB_CLIENT_SECRET=${{secrets.LOCAL_AUTH_GITHUB_CLIENT_SECRET}}
             BACKEND_SECRET=${{ secrets.BACKEND_SECRET }}
             BAC_BOT_TOKEN=${{ secrets.BAC_BOT_TOKEN }}
             TFB_APP_ID=${{ secrets.TFB_APP_ID }}

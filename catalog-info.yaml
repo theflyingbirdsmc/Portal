@@ -9,5 +9,5 @@ metadata:
   #   backstage.io/techdocs-ref: dir:.
 spec:
   type: website
-  owner: services
+  owner: theflyingbirdsmc/services
   lifecycle: production

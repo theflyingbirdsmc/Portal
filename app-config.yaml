@@ -133,6 +133,8 @@ events:
     topics:
       - github
 kubernetes:
+  podExecTerminal:
+    enabled: true
   serviceLocatorMethod:
     type: 'multiTenant'
   clusterLocatorMethods:

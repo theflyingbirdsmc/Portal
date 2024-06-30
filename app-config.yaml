@@ -138,11 +138,11 @@ kubernetes:
   clusterLocatorMethods:
     - type: 'config'
       clusters:
-        - url: https://95.216.4.245:16443
+        - url: https://65.108.8.46:16443
           name: microk8s
           authProvider: 'serviceAccount'
           skipTLSVerify: true
           skipMetricsLookup: true
           serviceAccountToken: ${BAC_BOT_TOKEN}
           dashboardApp: standard
-          dashboardUrl: https://95.216.4.245:16443 # url copied from running the command: minikube service kubernetes-dashboard -n kubernetes-dashboard
+          dashboardUrl: https://65.108.8.46:16443 # url copied from running the command: minikube service kubernetes-dashboard -n kubernetes-dashboard

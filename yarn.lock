@@ -3425,7 +3425,7 @@
     node-fetch "^2.6.7"
     winston "^3.2.1"
 
-"@backstage/plugin-kubernetes-react@^0.4.0":
+"@backstage/plugin-kubernetes-react@0.4.0", "@backstage/plugin-kubernetes-react@^0.4.0":
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-kubernetes-react/-/plugin-kubernetes-react-0.4.0.tgz#719489bcb7726d3788adf88d76ad66ca5420211b"
   integrity sha512-xfSujzFxicMH8A9MZl/ag1MvugnH3K5xLBym/ezSxoWfnXyLynbbLDhAacJ6pT2wJq5VxbDbjHNIW9u0IknVMg==

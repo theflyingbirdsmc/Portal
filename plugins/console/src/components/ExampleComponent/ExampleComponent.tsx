@@ -9,7 +9,17 @@ import {
   HeaderLabel,
   SupportButton,
 } from '@backstage/core-components';
-import { ExampleFetchComponent } from '../ExampleFetchComponent';
+import { FetchServers } from '../ExampleFetchComponent';
+import { PodExecTerminal, PodExecTerminalProps } from '@backstage/plugin-kubernetes-react';
+
+
+
+const props: PodExecTerminalProps = {
+  cluster: { name: "microk8s" },
+  containerName: "danish-survival",
+  podName: "danish-survival-0",
+  podNamespace: "tfb-servers",
+};
 
 export const ExampleComponent = () => (
   <Page themeId="tool">
@@ -21,18 +31,8 @@ export const ExampleComponent = () => (
       <ContentHeader title="Plugin title">
         <SupportButton>A description of your plugin goes here.</SupportButton>
       </ContentHeader>
-      <Grid container spacing={3} direction="column">
-        <Grid item>
-          <InfoCard title="Information card">
-            <Typography variant="body1">
-              All content should be wrapped in a card like this.
-            </Typography>
-          </InfoCard>
-        </Grid>
-        <Grid item>
-          <ExampleFetchComponent />
-        </Grid>
-      </Grid>
+      <FetchServers title="What is this?">
+        <PodExecTerminal {...props} />;
     </Content>
   </Page>
 );

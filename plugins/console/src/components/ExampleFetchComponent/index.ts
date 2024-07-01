@@ -1,1 +1,1 @@
-export { ExampleFetchComponent } from './ExampleFetchComponent';
+export { FetchServers } from './ExampleFetchComponent';

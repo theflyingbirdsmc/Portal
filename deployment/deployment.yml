@@ -1,0 +1,215 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: tfb-portal
+  namespace: argocd
+spec:
+  destination:
+    namespace: tfb-backend
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: kubernetes/backend/backstage
+    repoURL: git@github.com:theflyingbirdsmc/Improved-Infrastructure.git
+    targetRevision: HEAD
+  syncPolicy:
+    comparedTo:
+      destination:
+        namespace: tfb-backend
+        server: https://kubernetes.default.svc
+      source:
+        path: kubernetes/backend/backstage
+        repoURL: git@github.com:theflyingbirdsmc/Improved-Infrastructure.git
+        targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backstage
+  namespace: tfb-backend
+  labels:
+    backstage.io/kubernetes-id: backstage
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backstage
+  template:
+    metadata:
+      labels:
+        app: backstage
+    spec:
+      containers:
+      - image: docker.theflyingbirds.net/backstage:latest
+        imagePullPolicy: Always
+        name: backstage
+        ports:
+        - containerPort: 7007
+          name: backstage
+          protocol: TCP
+      - image: postgres:latest
+        name: postgres
+        ports:
+        - containerPort: 5432
+          name: postgres
+          protocol: TCP
+        env:
+        - name: POSTGRES_DB
+          value: "backstage"
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: postgres-password
+              key: postgresql-username
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-password
+              key: postgresql-password
+      imagePullSecrets:
+      - name: regcred
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  namespace: tfb-backend
+spec:
+  type: ClusterIP
+  ports:
+    - port: 5432
+      targetPort: postgres
+  selector:
+    app: backstage
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: backstage-ingress
+  namespace: tfb-backend
+  annotations:
+    cert-manager.io/cluster-issuer: theflyingbirds-prod
+spec:
+  tls:
+  - hosts:
+    - portal.theflyingbirds.net
+    secretName: backstage-tls
+  rules:
+  - host: portal.theflyingbirds.net
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: backstage-service
+            port:
+              number: 7007
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: regcred
+  namespace: tfb-backend
+type: kubernetes.io/dockerconfigjson
+data:
+  .dockerconfigjson: >-
+    eyJhdXRocyI6eyJkb2NrZXIudGhlZmx5aW5nYmlyZHMubmV0Ijp7InVzZXJuYW1lIjoidGZiIiwicGFzc3dvcmQiOiJmbU1VaGJMV0VlS1pWU3lraHZDRDV2WTJ3YlBlWmFzNXFIR3J5dSJ9fX0=
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: backstage-github-auth
+  namespace: tfb-backend
+data:
+  local_auth_github_client_id: ZGVlNmRkOThiOWRhYzY4NDVlYTM=
+  local_auth_github_client_secret: ODY2NDM2OTY0Y2M1NWQ2NjVlMjU5ZWUzODdlYTc5NzcxOTFiY2M5Zg==
+  auth_github_client_id: 44961e813e0770e289f3
+  auth_github_client_secret: 26e517825f5d3d68cd3b00d914ee4e28e260037a
+  bac_bot_token: ZXlKaGJHY2lPaUpTVXpJMU5pSXNJbXRwWkNJNkltc3hla2R5VTJWNE9HNWFPSFZJVTFOT1pGaG1TVE5DUjBwSWFFVk5jVmd0Umt4R2IzZGZVREJWZW5jaWZRLmV5SnBjM01pT2lKcmRXSmxjbTVsZEdWekwzTmxjblpwWTJWaFkyTnZkVzUwSWl3aWEzVmlaWEp1WlhSbGN5NXBieTl6WlhKMmFXTmxZV05qYjNWdWRDOXVZVzFsYzNCaFkyVWlPaUpqYjJSbGNpMW1kV2RzWlc0aUxDSnJkV0psY201bGRHVnpMbWx2TDNObGNuWnBZMlZoWTJOdmRXNTBMM05sWTNKbGRDNXVZVzFsSWpvaVltRmpMV0p2ZEMxMGIydGxiaUlzSW10MVltVnlibVYwWlhNdWFXOHZjMlZ5ZG1salpXRmpZMjkxYm5RdmMyVnlkbWxqWlMxaFkyTnZkVzUwTG01aGJXVWlPaUppWVdNdFltOTBJaXdpYTNWaVpYSnVaWFJsY3k1cGJ5OXpaWEoyYVdObFlXTmpiM1Z1ZEM5elpYSjJhV05sTFdGalkyOTFiblF1ZFdsa0lqb2lORFprWlRKaU1XSXRNREkxT1MwME1EWmtMV0l5TUdRdFlXWm1OV00zWW1FMlpqTXpJaXdpYzNWaUlqb2ljM2x6ZEdWdE9uTmxjblpwWTJWaFkyTnZkVzUwT21OdlpHVnlMV1oxWjJ4bGJqcGlZV010WW05MEluMC5ERDJTeGlpNDh5NjBULTlQczFoU3hibmxSLVFGQWZfamNxdEJFOVRLS3k5THdVUmJxMnZWY3BpNGY3Sk9MVU1CYmZGajEwZUxTeXBLNEIwMmYybEp0ODQyQWpnZC1kX1c3Mnk5LVFzamJuMnBaYmRMZHY1Q01tY3NwVGIxNFBHNFhUMUJjZEg2Y2x3anRxbTE5LTRyZTVDajlLd05UWWEtUFAwcXhyN2hzQTRpRFlqSjFGTkpFM3lYdEw5ajFYTVdrZmk0ZFlPMkpBc1YzdEhJYnh3VWpYemJ0X1BDNm4xX2FJZ3dubHNrRUVKMTh4Rkw2dEV4cmpRNXVTb3lncTdSamhJVVZMaG5sODA3dnFlT1NRdjE0Unk4U3BkR0pqcXEzVE1rNjAtYXlGTFdYbDNWTGJYLWRSMnlzRVpidndHX3V4RkQ0aEprcl95cERZdEtRR0pnc3c=
+  tfb_app_id: MzUwNzUx
+  tfb_app_client_secret: 9c06dc1f13e9925ddd3b5844c71157a9f41b3538
+  tfb_app_webhook_secret: f1f062967237608f6299ed3792026c15cd8cf430
+  tfb_app_client_id: SXYxLjY1NWFkMjZkODQ3N2RhMDg=
+  tfb_app_webhookurl: aHR0cHM6Ly9zbWVlLmlvL0N0clpOSlBIbFh0am5pRVFCTzg=
+  tfb_app_private_key_0: MIIEogIBAAKCAQEArMD5DA2ePamji6vgcmE+BorO6Cbwmn7uN8XMDizmkHfXaVay
+  tfb_app_private_key_1: m4lAdbRjT+Gqu1QMuWYmCeJTAM37XIoxEkvocUyST+GMGIc3aAAMNqYm9eZU9B/h
+  tfb_app_private_key_2: TijyvNKTVP6T637FKhP2eqU3Jhue9zCUGzUNoYL5zD7SI6xzkUMf5wrIku29PZI5
+  tfb_app_private_key_3: wq17/ebeWiiOty+XFTC4OVUtR0BFYoQ1gsEoWlCTcZQPXdP3y6cwgw28j6S/sW04
+  tfb_app_private_key_4: eqEEgrAlphZvD1U2p4tqfVdIqcPBuEYAIW9ooXqJa5h55VHMpkpk2rYuLA61FT52
+  tfb_app_private_key_5: 3sJUiRpN6pBYLpdPup45QKasOCSPGla/b+udqwIDAQABAoIBAEAzp1rXZMu9084A
+  tfb_app_private_key_6: nnVjtk1wIN0eO6TvL1EC7YcHINjn8OJxGge7xnz4AUCauXzNC72LPO/HcNmHs7b8
+  tfb_app_private_key_7: lKgcFdKlhmqxhANJnUnFWsSkky4n38KqZm1JwoxyJdcclZSblGLC8IM8C3baJQXw
+  tfb_app_private_key_10: LEb9W1gw/jzTE4H5tSPfenAXpKjgw+bn7dYorkpgZz3+dbL6Vry+hKPrM3nuZxig
+  tfb_app_private_key_11: ktqM18ECgYEA3r2gDJr/Y48ns83CJHFtIox2c0s50Qqdr1qrX+b1AzwFttPpqRR8
+  tfb_app_private_key_12: 14V86ZxMiVUAn/qG5wV3GKva5mi7O9eKdsA/Ew1+D+sjN3Ez4+4RZ6vliVTXJr2Y
+  tfb_app_private_key_13: qcMILmZ88830z5UhW9IkYQQqFxdcsF2gX4H6E6CVir404Q0Ik/h1jzkCgYEAxoyS
+  tfb_app_private_key_14: mrvoH1MrQHEC6NtWbNC7aCzHejNo733LKw50k4svyJRhEOq464fWCnp4RD1JlTH7
+  tfb_app_private_key_15: Y7QsR20id+uiDkPZMyw3P2Mkoz+11nuEkPk0W0si0/d2GzoVTcwLXUOkWIHH3MJK
+  tfb_app_private_key_16: i97uiwKeYaRDjQ/Ri0kb3vek6xpPhvZPsFTycAMCgYBD4P3ZWZLiwEmVHetAN+DO
+  tfb_app_private_key_17: WofucspXzihnu/Xl7/hS2APVx5a5lCjHdUKv3pXkdCcQmcRqutukhRrchKYqgnEL
+  tfb_app_private_key_18: 52JRaBc2uq2sw67Qk0hyk4wL4fL/N2BCu9DOcyU5F1a3u/bCiLPVbPN2vgPdK2so
+  tfb_app_private_key_19: L/AJ8zIfaf+rZdFrZphM4QKBgH6HtSIA3/Oeh/DAVG9a4F/mQZgo+VKqEpSVIPWm
+  tfb_app_private_key_20: d6pTSDdWP+mM/B21ajUxSRWLzSnUOXWXq6Q1K4Mq2hKnMHLJGcg+gWm7v0EZZCkT
+  tfb_app_private_key_21: d0c6wc49ZLoDMPJsN03PPpvc0SahdupePry+BXsKOLZbv1k5VRap0SK2mLnUnIIu
+  tfb_app_private_key_22: EHZLAoGADNvCzy32zZarmip9JTtxq6AwuhxqDM2RmFMQ09JnN25G8l0utTH69YDg
+  tfb_app_private_key_23: Pa45YZd5kwnnAHuGqS6UePUZvpAA6xq9tyA7/9FIqFB+UNjRHiNEyWJGNpCQTHPL
+  tfb_app_private_key_24: xkxtsdRJLNNPKXuxMYwUvzRX/EoXJftT44TxPYpNbt6dJZ1Uaz8=
+  postgres_host: postgres
+  postgres_user: YmFja3N0YWdl
+  postgres_password: YmFja3N0YWdlMTIz
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: bac-bot-token
+  namespace: tfb-backend
+  annotations:
+    kubernetes.io/service-account.name: bac-bot
+type: kubernetes.io/service-account-token
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: postgres-password
+  namespace: tfb-backend
+type: Opaque
+data:
+  postgresql-password: YmFja3N0YWdlMTIz
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: postgres-password
+  namespace: tfb-backend
+type: Opaque
+data:
+  postgresql-username: YmFja3N0YWdl
+  postgresql-password: YmFja3N0YWdlMTIz
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backstage-service
+  namespace: tfb-backend
+spec:
+  type: ClusterIP
+  ports:
+  - name: backstage-http
+    port: 7007
+    targetPort: 7007
+  selector:
+    app: backstage

@@ -1,33 +1,33 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: tfb-portal
-  namespace: argocd
-spec:
-  destination:
-    namespace: tfb-backend
-    server: https://kubernetes.default.svc
-  project: default
-  source:
-    path: kubernetes/backend/backstage
-    repoURL: git@github.com:theflyingbirdsmc/Improved-Infrastructure.git
-    targetRevision: HEAD
-  syncPolicy:
-    comparedTo:
-      destination:
-        namespace: tfb-backend
-        server: https://kubernetes.default.svc
-      source:
-        path: kubernetes/backend/backstage
-        repoURL: git@github.com:theflyingbirdsmc/Improved-Infrastructure.git
-        targetRevision: HEAD
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-    - CreateNamespace=true
----
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name: tfb-portal
+#   namespace: argocd
+# spec:
+#   destination:
+#     namespace: tfb-backend
+#     server: https://kubernetes.default.svc
+#   project: default
+#   source:
+#     path: kubernetes/backend/backstage
+#     repoURL: git@github.com:theflyingbirdsmc/Improved-Infrastructure.git
+#     targetRevision: HEAD
+#   syncPolicy:
+#     comparedTo:
+#       destination:
+#         namespace: tfb-backend
+#         server: https://kubernetes.default.svc
+#       source:
+#         path: kubernetes/backend/backstage
+#         repoURL: git@github.com:theflyingbirdsmc/Improved-Infrastructure.git
+#         targetRevision: HEAD
+#   syncPolicy:
+#     automated:
+#       prune: true
+#       selfHeal: true
+#     syncOptions:
+#     - CreateNamespace=true
+# ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:

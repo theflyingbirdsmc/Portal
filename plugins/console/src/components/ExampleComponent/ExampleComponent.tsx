@@ -1,7 +1,6 @@
 import React from 'react';
-import { Typography, Grid } from '@material-ui/core';
+// import { Typography, Grid } from '@material-ui/core';
 import {
-  InfoCard,
   Header,
   Page,
   Content,
@@ -9,7 +8,7 @@ import {
   HeaderLabel,
   SupportButton,
 } from '@backstage/core-components';
-import { FetchServers } from '../ExampleFetchComponent';
+// import { FetchServers } from '../ExampleFetchComponent';
 import { PodExecTerminal, PodExecTerminalProps } from '@backstage/plugin-kubernetes-react';
 
 
@@ -31,7 +30,7 @@ export const ExampleComponent = () => (
       <ContentHeader title="Plugin title">
         <SupportButton>A description of your plugin goes here.</SupportButton>
       </ContentHeader>
-      <FetchServers title="What is this?">
+      {/* <FetchServers title="What is this?"> */}
         <PodExecTerminal {...props} />;
     </Content>
   </Page>

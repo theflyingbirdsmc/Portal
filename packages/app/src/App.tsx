@@ -13,7 +13,7 @@ import {
 import { ScaffolderPage, scaffolderPlugin } from '@backstage/plugin-scaffolder';
 import { orgPlugin } from '@backstage/plugin-org';
 import { SearchPage } from '@backstage/plugin-search';
-import { TechRadarPage } from '@backstage/plugin-tech-radar';
+import { TechRadarPage } from '@backstage-community/plugin-tech-radar';
 import {
   TechDocsIndexPage,
   techdocsPlugin,
@@ -39,7 +39,7 @@ import { RequirePermission } from '@backstage/plugin-permission-react';
 import { catalogEntityCreatePermission } from '@backstage/plugin-catalog-common/alpha';
 import { githubAuthApiRef } from '@backstage/core-plugin-api';
 // import { ExplorePage } from '@backstage/plugin-explore';
-// import { ConsolePage } from 'backstage-plugin-console';
+import { ConsolePage } from 'backstage-plugin-console';
 const app = createApp({
   components: {
     SignInPage: props => (
@@ -113,7 +113,7 @@ const routes = (
     </Route>
     <Route path="/settings" element={<UserSettingsPage />} />
     <Route path="/catalog-graph" element={<CatalogGraphPage />} />
-    {/* <Route path="/console" element={<ConsolePage />} /> */}
+    <Route path="/console" element={<ConsolePage />} />
   </FlatRoutes>
 );
 

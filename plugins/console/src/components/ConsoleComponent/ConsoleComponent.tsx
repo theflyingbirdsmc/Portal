@@ -32,20 +32,23 @@ export const ConsoleComponent = () => {
 
   useEffect(() => {
     if (terminalContainerRef.current) {
-      const terminalSpan = terminalContainerRef.current.querySelector('.xterm-rows span.xterm-cursor');
+      const terminalSpans = terminalContainerRef.current.querySelectorAll('.xterm-rows span');
+      const commandSpan = Array.from(terminalSpans).find(span => span.textContent === '# ');
 
-      if (terminalSpan) {
-        const command = "your-initial-command-here";
+      if (commandSpan) {
+        const command = "ls -la";
+        let currentCommand = commandSpan.textContent || '';
 
         for (const char of command) {
           const keydownEvent = new KeyboardEvent('keydown', { key: char });
-          terminalSpan.dispatchEvent(keydownEvent);
-          terminalSpan.textContent += char; // Append the character to the span's textContent
+          commandSpan.dispatchEvent(keydownEvent);
+          currentCommand += char;
+          commandSpan.textContent = currentCommand; // Update the span's textContent
         }
 
         // Simulate pressing enter
         const enterEvent = new KeyboardEvent('keydown', { key: 'Enter' });
-        terminalSpan.dispatchEvent(enterEvent);
+        commandSpan.dispatchEvent(enterEvent);
       }
     }
   }, [key]);

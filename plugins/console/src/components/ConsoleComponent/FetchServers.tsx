@@ -1,5 +1,5 @@
 import { useApi } from '@backstage/core-plugin-api';
-import { catalogApiRef } from '@backstage/plugin-catalog-react';
+import { catalogApiRef, CATALOG_FILTER_EXISTS } from '@backstage/plugin-catalog-react';
 import { useAsync } from 'react-use';
 
 export function getServers() {
@@ -8,11 +8,13 @@ export function getServers() {
     const { value: catalogResponse } = useAsync(async () => {
         try {
             const response = await catalogApi.getEntities({
-                filter: { 'metadata.annotations': 'backstage.io/kubernetes-id' },
+                filter: {
+                    ['metadata.annotations.backstage.io/kubernetes-id']: CATALOG_FILTER_EXISTS
+                },
             });
-
+            console.log(JSON.stringify(response));
             const entityNames = response?.items.map((item: any) => ({
-                name: item.metadata.name,
+                name: item.metadata.annotations['backstage.io/kubernetes-id'],
             })) || [];
 
             return entityNames;

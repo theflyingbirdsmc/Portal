@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Select, MenuItem, FormControl, InputLabel } from '@material-ui/core';
 import {
   Header,
@@ -7,24 +7,59 @@ import {
   ContentHeader,
   HeaderLabel,
   SupportButton,
+  Progress,
+  ResponseErrorPanel,
 } from '@backstage/core-components';
 import { PodExecTerminal, PodExecTerminalProps } from '@backstage/plugin-kubernetes-react';
 import { getServers } from './FetchServers';
 
 export const ConsoleComponent = () => {
   const servers = getServers();
-  const [selectedServer, setSelectedServer] = useState<string | undefined>(servers[0]?.name);
+  const [selectedServer, setSelectedServer] = useState<string>('');
+  const [key, setKey] = useState<number>(0);
+  const terminalContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (servers.length > 0) {
+      setSelectedServer(servers[0].name);
+    }
+  }, [servers]);
 
   const handleServerChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setSelectedServer(event.target.value as string);
+    setKey(prevKey => prevKey + 1); // Change key to force re-mount
   };
+
+  useEffect(() => {
+    if (terminalContainerRef.current) {
+      const terminalSpan = terminalContainerRef.current.querySelector('.xterm-rows span.xterm-cursor');
+
+      if (terminalSpan) {
+        const command = "your-initial-command-here";
+
+        for (const char of command) {
+          const keydownEvent = new KeyboardEvent('keydown', { key: char });
+          terminalSpan.dispatchEvent(keydownEvent);
+          terminalSpan.textContent += char; // Append the character to the span's textContent
+        }
+
+        // Simulate pressing enter
+        const enterEvent = new KeyboardEvent('keydown', { key: 'Enter' });
+        terminalSpan.dispatchEvent(enterEvent);
+      }
+    }
+  }, [key]);
 
   const props: PodExecTerminalProps = {
     cluster: { name: "microk8s" }, // Adjust based on selected server if needed
-    containerName: selectedServer || "default-container", // Adjust based on selected server
-    podName: "danish-survival-0", // Adjust based on selected server
+    containerName: selectedServer || "danish-survival", // Adjust based on selected server
+    podName: `${selectedServer}-0`, // Adjust based on selected server
     podNamespace: "tfb-servers", // Adjust based on selected server
   };
+
+  if (servers.length === 0) {
+    return <Progress />;
+  }
 
   return (
     <Page themeId="tool">
@@ -36,7 +71,7 @@ export const ConsoleComponent = () => {
         <ContentHeader title="Plugin title">
           <SupportButton>A description of your plugin goes here.</SupportButton>
         </ContentHeader>
-        <FormControl variant="outlined" style={{ minWidth: 200 }}>
+        <FormControl variant="outlined" style={{ minWidth: 200, marginBottom: 20 }}>
           <InputLabel id="server-select-label">Select Server</InputLabel>
           <Select
             labelId="server-select-label"
@@ -52,7 +87,9 @@ export const ConsoleComponent = () => {
             ))}
           </Select>
         </FormControl>
-        <PodExecTerminal {...props} />;
+        <div ref={terminalContainerRef}>
+          {selectedServer && <PodExecTerminal key={key} {...props} />}
+        </div>
       </Content>
     </Page>
   );

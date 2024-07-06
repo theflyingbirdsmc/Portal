@@ -16,7 +16,7 @@ export const ConsolePage = consolePlugin.provide(
   createRoutableExtension({
     name: 'ConsolePage',
     component: () =>
-      import('./components/ExampleComponent').then(m => m.ExampleComponent),
+      import('./components/ConsoleComponent').then(m => m.ConsoleComponent),
     mountPoint: rootRouteRef,
   }),
 );

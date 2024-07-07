@@ -1,34 +1,12 @@
-/*
- * Copyright 2023 The Backstage Authors
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 import 'xterm/css/xterm.css';
-
 import { discoveryApiRef, useApi } from '@backstage/core-plugin-api';
 import { ClusterAttributes } from '@backstage/plugin-kubernetes-common';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Terminal } from 'xterm';
 import { FitAddon } from 'xterm-addon-fit';
-
 import { PodExecTerminalAttachAddon } from './PodExecTerminalAttachAddon';
 
-/**
- * Props drilled down to the PodExecTerminal component
- *
- * @public
- */
 export interface PodExecTerminalProps {
   cluster: ClusterAttributes;
   containerName: string;
@@ -36,8 +14,7 @@ export interface PodExecTerminalProps {
   podNamespace: string;
 }
 
-const hasSocketProtocol = (url: string | URL) =>
-  /wss?:\/\//.test(url.toString());
+const hasSocketProtocol = (url: string | URL) => /wss?:\/\//.test(url.toString());
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -49,17 +26,10 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-/**
- * Executes a `/bin/sh` process in the given pod's container and opens a terminal connected to it
- *
- * @public
- */
 export const PodExecTerminal = (props: PodExecTerminalProps) => {
   const classes = useStyles();
   const { containerName, podNamespace, podName } = props;
-
   const [baseUrl, setBaseUrl] = useState(window.location.host);
-
   const terminalRef = React.useRef(null);
   const discoveryApi = useApi(discoveryApiRef);
   const namespace = podNamespace ?? 'default';
@@ -73,14 +43,15 @@ export const PodExecTerminal = (props: PodExecTerminalProps) => {
   }, [discoveryApi]);
 
   const urlParams = useMemo(() => {
-    const params = new URLSearchParams({
-      container: containerName,
-      stdin: 'true',
-      stdout: 'true',
-      stderr: 'true',
-      tty: 'true',
-      command: '/bin/bash'
-    });
+    const params = new URLSearchParams();
+    params.append('container', containerName);
+    params.append('stdin', 'true');
+    params.append('stdout', 'true');
+    params.append('stderr', 'true');
+    params.append('tty', 'true');
+    params.append('command', '/bin/bash');
+    params.append('command', '-c');
+    params.append('command', 'screen -x minecraft');
     return params;
   }, [containerName]);
 

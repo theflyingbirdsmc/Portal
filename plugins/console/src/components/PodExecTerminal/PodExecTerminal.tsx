@@ -1,4 +1,5 @@
 import 'xterm/css/xterm.css';
+import './CustomColors.css'; // your custom styles
 import { discoveryApiRef, useApi } from '@backstage/core-plugin-api';
 import { ClusterAttributes } from '@backstage/plugin-kubernetes-common';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
@@ -12,6 +13,7 @@ export interface PodExecTerminalProps {
   containerName: string;
   podName: string;
   podNamespace: string;
+  command?: string; // Optional command property
 }
 
 const hasSocketProtocol = (url: string | URL) => /wss?:\/\//.test(url.toString());
@@ -28,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const PodExecTerminal = (props: PodExecTerminalProps) => {
   const classes = useStyles();
-  const { containerName, podNamespace, podName } = props;
+  const { containerName, podNamespace, podName, command } = props;
   const [baseUrl, setBaseUrl] = useState(window.location.host);
   const terminalRef = React.useRef(null);
   const discoveryApi = useApi(discoveryApiRef);
@@ -50,10 +52,14 @@ export const PodExecTerminal = (props: PodExecTerminalProps) => {
     params.append('stderr', 'true');
     params.append('tty', 'true');
     params.append('command', '/bin/bash');
-    params.append('command', '-c');
-    params.append('command', 'screen -x minecraft');
+
+    if (command) {
+      params.append('command', '-c');
+      params.append('command', command);
+    }
+
     return params;
-  }, [containerName]);
+  }, [containerName, command]);
 
   const socketUrl = useMemo(() => {
     if (!hasSocketProtocol(baseUrl)) {
@@ -70,7 +76,29 @@ export const PodExecTerminal = (props: PodExecTerminalProps) => {
       return () => { };
     }
 
-    const terminal = new Terminal();
+    const terminal = new Terminal({
+      theme: {
+        background: '#1d1f21',
+        foreground: '#c5c8c6',
+        cursor: '#c5c8c6',
+        black: '#1d1f21',
+        red: '#cc6666',
+        green: '#b5bd68',
+        yellow: '#f0c674',
+        blue: '#81a2be',
+        magenta: '#b294bb',
+        cyan: '#8abeb7',
+        white: '#c5c8c6',
+        brightBlack: '#666666',
+        brightRed: '#d54e53',
+        brightGreen: '#b9ca4a',
+        brightYellow: '#e7c547',
+        brightBlue: '#7aa6da',
+        brightMagenta: '#c397d8',
+        brightCyan: '#70c0b1',
+        brightWhite: '#eaeaea',
+      },
+    });
     const fitAddon = new FitAddon();
     terminal.loadAddon(fitAddon);
 

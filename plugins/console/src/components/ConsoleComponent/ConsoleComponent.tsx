@@ -57,6 +57,7 @@ export const ConsoleComponent = () => {
     containerName: selectedServer || "danish-survival", // Adjust based on selected server
     podName: `${selectedServer}-0`, // Adjust based on selected server
     podNamespace: "tfb-servers", // Adjust based on selected server
+    command: "screen -x minecraft", // Optional command property
   };
 
   if (servers.length === 0) {

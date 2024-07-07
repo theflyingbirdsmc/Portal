@@ -8,9 +8,8 @@ import {
   HeaderLabel,
   SupportButton,
   Progress,
-  ResponseErrorPanel,
 } from '@backstage/core-components';
-import { PodExecTerminal, PodExecTerminalProps } from '@backstage/plugin-kubernetes-react';
+import { PodExecTerminal, PodExecTerminalProps } from '../PodExecTerminal/PodExecTerminal';
 import { getServers } from './FetchServers';
 
 export const ConsoleComponent = () => {
@@ -30,28 +29,28 @@ export const ConsoleComponent = () => {
     setKey(prevKey => prevKey + 1); // Change key to force re-mount
   };
 
-  useEffect(() => {
-    if (terminalContainerRef.current) {
-      const terminalSpans = terminalContainerRef.current.querySelectorAll('.xterm-rows span');
-      const commandSpan = Array.from(terminalSpans).find(span => span.textContent === '# ');
+  // useEffect(() => {
+  //   if (terminalContainerRef.current) {
+  //     const terminalSpans = terminalContainerRef.current.querySelectorAll('.xterm-rows span');
+  //     const commandSpan = Array.from(terminalSpans).find(span => span.textContent === '# ');
 
-      if (commandSpan) {
-        const command = "ls -la";
-        let currentCommand = commandSpan.textContent || '';
+  //     if (commandSpan) {
+  //       const command = "ls -la";
+  //       let currentCommand = commandSpan.textContent || '';
 
-        for (const char of command) {
-          const keydownEvent = new KeyboardEvent('keydown', { key: char });
-          commandSpan.dispatchEvent(keydownEvent);
-          currentCommand += char;
-          commandSpan.textContent = currentCommand; // Update the span's textContent
-        }
+  //       for (const char of command) {
+  //         const keydownEvent = new KeyboardEvent('keydown', { key: char });
+  //         commandSpan.dispatchEvent(keydownEvent);
+  //         currentCommand += char;
+  //         commandSpan.textContent = currentCommand; // Update the span's textContent
+  //       }
 
-        // Simulate pressing enter
-        const enterEvent = new KeyboardEvent('keydown', { key: 'Enter' });
-        commandSpan.dispatchEvent(enterEvent);
-      }
-    }
-  }, [key]);
+  //       // Simulate pressing enter
+  //       const enterEvent = new KeyboardEvent('keydown', { key: 'Enter' });
+  //       commandSpan.dispatchEvent(enterEvent);
+  //     }
+  //   }
+  // }, [key]);
 
   const props: PodExecTerminalProps = {
     cluster: { name: "microk8s" }, // Adjust based on selected server if needed

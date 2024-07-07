@@ -1,5 +1,4 @@
 import 'xterm/css/xterm.css';
-import './CustomColors.css'; // your custom styles
 import { discoveryApiRef, useApi } from '@backstage/core-plugin-api';
 import { ClusterAttributes } from '@backstage/plugin-kubernetes-common';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';

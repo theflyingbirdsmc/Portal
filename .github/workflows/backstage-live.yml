@@ -24,7 +24,7 @@ jobs:
 
       - name: Build Backstage Docker image
         run: |
-          DOCKER_BUILDKIT=1 docker build -f packages/backend/Dockerfile --tag docker.theflyingbirds.net/backstage:latest \
+          DOCKER_BUILDKIT=1 docker build -f packages/backend/Dockerfile --tag ${{ secrets.HARBOR_URL }}/backstage:latest \
             --build-arg BACKEND_SECRET="${{ secrets.BACKEND_SECRET }}" \
             --build-arg BAC_BOT_TOKEN="${{ secrets.BAC_BOT_TOKEN }}" \
             --build-arg POSTGRES_HOST="${{ secrets.POSTGRES_HOST }}" \

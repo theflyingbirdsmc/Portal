@@ -24,7 +24,7 @@ jobs:
 
       - name: Build Backstage Docker image
         run: |
-          DOCKER_BUILDKIT=1 docker build -f packages/backend/Dockerfile --tag ${{ secrets.HARBOR_URL }}/portal:latest \
+          DOCKER_BUILDKIT=1 docker build -f packages/backend/Dockerfile --tag ${{ secrets.HARBOR_DOCKER_REGISTRY }}/portal:latest \
             --build-arg BACKEND_SECRET="${{ secrets.BACKEND_SECRET }}" \
             --build-arg BAC_BOT_TOKEN="${{ secrets.BAC_BOT_TOKEN }}" \
             --build-arg POSTGRES_HOST="${{ secrets.POSTGRES_HOST }}" \
@@ -69,8 +69,8 @@ jobs:
       - name: Login to DockerHub
         uses: docker/login-action@v2
         with:
-          registry: ${{ secrets.HARBOR_URL }}
+          registry: ${{ secrets.HARBOR_DOCKER_REGISTRY }}
           username: ${{ secrets.HARBOR_USERNAME }}
           password: ${{ secrets.HARBOR_PASSWORD }}
       - name: Push
-        run: docker push ${{ secrets.HARBOR_URL }}/portal:latest
+        run: docker push ${{ secrets.HARBOR_DOCKER_REGISTRY }}/portal:latest

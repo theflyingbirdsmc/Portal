@@ -8,7 +8,6 @@ on:
 jobs:
   build-test-publish:
     runs-on: ubuntu-latest
-
     steps:
       # Check out the repository
       - name: Checkout code

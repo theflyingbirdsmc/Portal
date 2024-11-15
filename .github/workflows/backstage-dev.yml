@@ -83,6 +83,8 @@ jobs:
         uses: ./.github/actions/setup-tf
 
       - name: Terraform init and validate
+        env:
+          KUBECONFIG: ${{ secrets.KUBECONFIG }}
         run: |
           cd .devcontainer/portal-dev
           terraform init -upgrade
@@ -94,6 +96,7 @@ jobs:
           cd .devcontainer/portal-dev
           terraform apply -auto-approve
         env:
+          KUBECONFIG: ${{ secrets.KUBECONFIG }}
           # Consumed by coderd provider
           CODER_URL: https://coder.theflyingbirds.net
           CODER_SESSION_TOKEN: ${{ secrets.CODER_SESSION_TOKEN }}

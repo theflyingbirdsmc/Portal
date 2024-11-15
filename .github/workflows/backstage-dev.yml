@@ -92,22 +92,21 @@ jobs:
           terraform init -upgrade
           terraform validate
           
-      # Step 3: Set environment variables
-      - name: Set environment variables
-        env:
-          CODER_URL: ${{ secrets.CODER_URL }}
-          CODER_SESSION_TOKEN: ${{ secrets.CODER_SESSION_TOKEN }}
+      # Step 2: Install the Coder CLI
+      - name: Install Coder CLI
         run: |
-          export CODER_TEMPLATE_NAME=portal
-          export CODER_TEMPLATE_DIR=.devcontainer/portal-dev
-          export CODER_TEMPLATE_VERSION=$(git rev-parse --short HEAD)
+          curl -L https://coder.com/install.sh | sh
 
-      # Step 4: Push the template to Coder
+      # Step 3: Set environment variables and push template
       - name: Push template to Coder
         env:
           CODER_URL: ${{ secrets.CODER_URL }}
           CODER_SESSION_TOKEN: ${{ secrets.CODER_SESSION_TOKEN }}
         run: |
+          export CODER_TEMPLATE_NAME=my-template
+          export CODER_TEMPLATE_DIR=.coder/templates/kubernetes
+          export CODER_TEMPLATE_VERSION=$(git rev-parse --short HEAD)
+
           coder templates push --yes $CODER_TEMPLATE_NAME \
               --directory $CODER_TEMPLATE_DIR \
               --name=$CODER_TEMPLATE_VERSION

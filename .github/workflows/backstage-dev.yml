@@ -92,22 +92,25 @@ jobs:
           terraform init -upgrade
           terraform validate
           
-      - name: "Push template"
-        if: github.ref == 'refs/heads/main'
-        run: |
-          cd .devcontainer/portal-dev
-          terraform apply -auto-approve
+      # Step 3: Set environment variables
+      - name: Set environment variables
         env:
-          TF_VAR_use_kubeconfig: "true"
-          # Consumed by coderd provider
-          CODER_URL: https://coder.theflyingbirds.net
+          CODER_URL: ${{ secrets.CODER_URL }}
           CODER_SESSION_TOKEN: ${{ secrets.CODER_SESSION_TOKEN }}
-          # Template source & details
-          TF_VAR_CODER_TEMPLATE_NAME: Portal
-          TF_VAR_CODER_TEMPLATE_VERSION: ${{ steps.vars.outputs.sha_short }}
-          TF_VAR_CODER_TEMPLATE_DIR: ./portal-dev
-          TF_VAR_CODER_TEMPLATE_MESSAGE: ${{ steps.message.outputs.pr_title }}
-          TF_LOG: info
+        run: |
+          export CODER_TEMPLATE_NAME=portal
+          export CODER_TEMPLATE_DIR=.devcontainer/portal-dev
+          export CODER_TEMPLATE_VERSION=$(git rev-parse --short HEAD)
+
+      # Step 4: Push the template to Coder
+      - name: Push template to Coder
+        env:
+          CODER_URL: ${{ secrets.CODER_URL }}
+          CODER_SESSION_TOKEN: ${{ secrets.CODER_SESSION_TOKEN }}
+        run: |
+          coder templates push --yes $CODER_TEMPLATE_NAME \
+              --directory $CODER_TEMPLATE_DIR \
+              --name=$CODER_TEMPLATE_VERSION
   cleanup:
     runs-on: ubuntu-latest
     steps:

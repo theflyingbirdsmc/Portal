@@ -104,7 +104,7 @@ jobs:
           CODER_SESSION_TOKEN: ${{ secrets.CODER_SESSION_TOKEN }}
         run: |
           export CODER_TEMPLATE_NAME=portal
-          export CODER_TEMPLATE_DIR=.coder/templates/kubernetes
+          export CODER_TEMPLATE_DIR=.devcontainer/portal-dev
           export CODER_TEMPLATE_VERSION=$(git rev-parse --short HEAD)
 
           coder templates push --yes $CODER_TEMPLATE_NAME \

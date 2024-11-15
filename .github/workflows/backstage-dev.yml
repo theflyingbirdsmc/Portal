@@ -77,8 +77,11 @@ jobs:
         id: message
         run: echo "pr_title=$(git log --format=%s -n 1 ${{ github.sha }})" >> $GITHUB_OUTPUT
 
-      - name: Create kubeconfig
-        run: echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config
+      - name: Create kubeconfig file
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config
+        shell: bash
 
       - name: Setup Terraform
         uses: ./.github/actions/setup-tf

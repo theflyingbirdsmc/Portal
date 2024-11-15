@@ -103,7 +103,7 @@ jobs:
           CODER_URL: ${{ secrets.CODER_URL }}
           CODER_SESSION_TOKEN: ${{ secrets.CODER_SESSION_TOKEN }}
         run: |
-          export CODER_TEMPLATE_NAME=portal
+          export CODER_TEMPLATE_NAME=Portal
           export CODER_TEMPLATE_DIR=.devcontainer/portal-dev
           export CODER_TEMPLATE_VERSION=$(git rev-parse --short HEAD)
 

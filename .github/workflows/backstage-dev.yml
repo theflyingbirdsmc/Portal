@@ -78,7 +78,7 @@ jobs:
         run: echo "pr_title=$(git log --format=%s -n 1 ${{ github.sha }})" >> $GITHUB_OUTPUT
 
       - name: Setup Terraform
-        uses: ./.github/actions/setup-tf
+        uses: ./.github/workflows/setup-tf.yaml
 
       - name: Terraform init and validate
         run: |

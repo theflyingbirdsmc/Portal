@@ -114,7 +114,7 @@ resource "coder_agent" "main" {
     # Clone repo from GitHub
     if [ ! -d "/home/coder/Portal" ]
     then
-        git clone https://github.com/theflyingbirdsmc/Portal
+        git clone https://github.com/theflyingbirdsmc/Portal.git
     fi
   EOT
 

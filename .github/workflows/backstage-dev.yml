@@ -33,7 +33,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           context: .devcontainer/ # specifying the directory where your Dockerfile is
           push: true
-          tags: ${{ secrets.DOCKER_REGISTRY }}/backstage-dev:latest # change this to your image name
+          tags: ${{ secrets.DOCKER_REPO }}/backstage-dev:latest # change this to your image name
           build-args: |
             LOCAL_AUTH_GITHUB_CLIENT_ID=${{secrets.LOCAL_AUTH_GITHUB_CLIENT_ID}}
             LOCAL_AUTH_GITHUB_CLIENT_SECRET=${{secrets.LOCAL_AUTH_GITHUB_CLIENT_SECRET}}

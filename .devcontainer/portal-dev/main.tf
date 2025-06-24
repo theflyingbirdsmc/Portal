@@ -2,16 +2,10 @@
 terraform {
   required_providers {
     coder = {
-      source  = "coder/coder"
-      version = "~> 1.0.4"
+      source = "coder/coder"
     }
     kubernetes = {
-      source  = "hashicorp/kubernetes"
-      version = "~> 2.36.0"
-    }
-    docker = {
-      source  = "kreuzwerker/docker"
-      version = "3.0.2"
+      source = "hashicorp/kubernetes"
     }
   }
 }
@@ -37,24 +31,12 @@ data "coder_parameter" "cpu" {
   name         = "cpu"
   display_name = "CPU"
   description  = "The number of CPU cores"
-  default      = "2"
+  default      = "3"
   icon         = "/icon/memory.svg"
   mutable      = true
   option {
-    name  = "2 Cores"
-    value = "2"
-  }
-  option {
-    name  = "4 Cores"
-    value = "4"
-  }
-  option {
-    name  = "6 Cores"
-    value = "6"
-  }
-  option {
-    name  = "8 Cores"
-    value = "8"
+    name  = "3 Cores"
+    value = "3"
   }
 }
 
@@ -62,21 +44,9 @@ data "coder_parameter" "memory" {
   name         = "memory"
   display_name = "Memory"
   description  = "The amount of memory in GB"
-  default      = "2"
+  default      = "8"
   icon         = "/icon/memory.svg"
   mutable      = true
-  option {
-    name  = "2 GB"
-    value = "2"
-  }
-  option {
-    name  = "4 GB"
-    value = "4"
-  }
-  option {
-    name  = "6 GB"
-    value = "6"
-  }
   option {
     name  = "8 GB"
     value = "8"
@@ -122,10 +92,10 @@ resource "coder_agent" "main" {
   # You can remove this block if you'd prefer to configure Git manually or using
   # dotfiles. (see docs/dotfiles.md)
   env = {
-    GIT_AUTHOR_NAME     = "${data.coder_workspace.me.owner}"
-    GIT_COMMITTER_NAME  = "${data.coder_workspace.me.owner}"
-    GIT_AUTHOR_EMAIL    = "${data.coder_workspace.me.owner_email}"
-    GIT_COMMITTER_EMAIL = "${data.coder_workspace.me.owner_email}"
+    GIT_AUTHOR_NAME     = "${data.coder_workspace_owner.me.name}"
+    GIT_COMMITTER_NAME  = "${data.coder_workspace_owner.me.name}"
+    GIT_AUTHOR_EMAIL    = "${data.coder_workspace_owner.me.name_email}"
+    GIT_COMMITTER_EMAIL = "${data.coder_workspace_owner.me.name_email}"
   }
 
   # The following metadata blocks are optional. They are used to display
@@ -187,26 +157,27 @@ resource "coder_agent" "main" {
 
 resource "kubernetes_persistent_volume_claim" "home" {
   metadata {
-    name      = "coder-${lower(data.coder_workspace.me.owner)}-${lower(data.coder_workspace.me.name)}-home"
-    namespace = "coder-${lower(data.coder_workspace.me.owner)}"
+    name      = "coder-${lower(data.coder_workspace_owner.me.name)}-${lower(data.coder_workspace.me.name)}-home"
+    namespace = "coder-${lower(data.coder_workspace_owner.me.name)}"
     labels = {
       "app.kubernetes.io/name"     = "coder-pvc"
-      "app.kubernetes.io/instance" = "coder-pvc-${lower(data.coder_workspace.me.owner)}-${lower(data.coder_workspace.me.name)}"
+      "app.kubernetes.io/instance" = "coder-pvc-${lower(data.coder_workspace_owner.me.name)}-${lower(data.coder_workspace.me.name)}"
       "app.kubernetes.io/part-of"  = "coder"
       // Coder specific labels.
       "com.coder.resource"       = "true"
       "com.coder.workspace.id"   = data.coder_workspace.me.id
       "com.coder.workspace.name" = data.coder_workspace.me.name
-      "com.coder.user.id"        = data.coder_workspace.me.owner_id
-      "com.coder.user.username"  = data.coder_workspace.me.owner
+      "com.coder.user.id"        = data.coder_workspace_owner.me.name_id
+      "com.coder.user.username"  = data.coder_workspace_owner.me.name
     }
     annotations = {
-      "com.coder.user.email" = data.coder_workspace.me.owner_email
+      "com.coder.user.email" = data.coder_workspace_owner.me.name_email
     }
   }
   wait_until_bound = false
   spec {
     access_modes = ["ReadWriteOnce"]
+    storage_class_name = "openebs-hostpath"
     resources {
       requests = {
         storage = "${data.coder_parameter.home_disk_size.value}Gi"
@@ -220,20 +191,20 @@ resource "kubernetes_pod" "main" {
 
   metadata {
     name      = "portal"
-    namespace = "coder-${lower(data.coder_workspace.me.owner)}"
+    namespace = "coder-${lower(data.coder_workspace_owner.me.name)}"
     labels = {
       "app.kubernetes.io/name"     = "portal"
-      "app.kubernetes.io/instance" = "portal-${lower(data.coder_workspace.me.owner)}-${lower(data.coder_workspace.me.name)}"
+      "app.kubernetes.io/instance" = "portal-${lower(data.coder_workspace_owner.me.name)}-${lower(data.coder_workspace.me.name)}"
       "app.kubernetes.io/part-of"  = "coder"
       // Coder specific labels.
       "com.coder.resource"       = "true"
       "com.coder.workspace.id"   = data.coder_workspace.me.id
       "com.coder.workspace.name" = data.coder_workspace.me.name
-      "com.coder.user.id"        = data.coder_workspace.me.owner_id
-      "com.coder.user.username"  = data.coder_workspace.me.owner
+      "com.coder.user.id"        = data.coder_workspace_owner.me.name_id
+      "com.coder.user.username"  = data.coder_workspace_owner.me.name
     }
     annotations = {
-      "com.coder.user.email" = data.coder_workspace.me.owner_email
+      "com.coder.user.email" = data.coder_workspace_owner.me.name_email
     }
   }
 
@@ -251,7 +222,7 @@ resource "kubernetes_pod" "main" {
       image_pull_policy = "Always"
       command           = ["sh", "-c", coder_agent.main.init_script]
       port {
-        container_port = 30001
+        container_port = 3000
       }
       security_context {
         run_as_user = "1000"
@@ -310,7 +281,7 @@ resource "kubernetes_pod" "main" {
             match_expressions {
               key      = "kubernetes.io/hostname"
               operator = "In"
-              values   = ["tfb-root-eu"]
+              values   = ["bm-tfb-cluster-1556693"]
             }
           }
         }
@@ -322,7 +293,7 @@ resource "kubernetes_pod" "main" {
 resource "kubernetes_config_map" "backstage_hosts_config" {
   metadata {
     name      = "backstage-hosts-config"
-    namespace = "coder-${lower(data.coder_workspace.me.owner)}"
+    namespace = "coder-${lower(data.coder_workspace_owner.me.name)}"
   }
 
   data = {
@@ -336,7 +307,7 @@ resource "kubernetes_config_map" "backstage_hosts_config" {
 resource "kubernetes_pod" "postgres" {
   metadata {
     name      = "postgres"
-    namespace = "coder-${lower(data.coder_workspace.me.owner)}"
+    namespace = "coder-${lower(data.coder_workspace_owner.me.name)}"
     labels = {
       "app.kubernetes.io/name"     = "postgres"
       "app.kubernetes.io/instance" = "postgres"

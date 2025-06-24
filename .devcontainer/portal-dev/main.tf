@@ -12,6 +12,8 @@ terraform {
 
 provider "coder" {
 }
+data "coder_workspace" "me" {}
+data "coder_workspace_owner" "me" {}
 
 variable "use_kubeconfig" {
   type        = bool

@@ -96,8 +96,8 @@ resource "coder_agent" "main" {
   env = {
     GIT_AUTHOR_NAME     = "${data.coder_workspace_owner.me.name}"
     GIT_COMMITTER_NAME  = "${data.coder_workspace_owner.me.name}"
-    GIT_AUTHOR_EMAIL    = "${data.coder_workspace_owner.me.name_email}"
-    GIT_COMMITTER_EMAIL = "${data.coder_workspace_owner.me.name_email}"
+    GIT_AUTHOR_EMAIL    = "${data.coder_workspace_owner.me.email}"
+    GIT_COMMITTER_EMAIL = "${data.coder_workspace_owner.me.email}"
   }
 
   # The following metadata blocks are optional. They are used to display
@@ -169,11 +169,11 @@ resource "kubernetes_persistent_volume_claim" "home" {
       "com.coder.resource"       = "true"
       "com.coder.workspace.id"   = data.coder_workspace.me.id
       "com.coder.workspace.name" = data.coder_workspace.me.name
-      "com.coder.user.id"        = data.coder_workspace_owner.me.name_id
+      "com.coder.user.id"        = data.coder_workspace_owner.me.id
       "com.coder.user.username"  = data.coder_workspace_owner.me.name
     }
     annotations = {
-      "com.coder.user.email" = data.coder_workspace_owner.me.name_email
+      "com.coder.user.email" = data.coder_workspace_owner.me.email
     }
   }
   wait_until_bound = false
@@ -202,11 +202,11 @@ resource "kubernetes_pod" "main" {
       "com.coder.resource"       = "true"
       "com.coder.workspace.id"   = data.coder_workspace.me.id
       "com.coder.workspace.name" = data.coder_workspace.me.name
-      "com.coder.user.id"        = data.coder_workspace_owner.me.name_id
+      "com.coder.user.id"        = data.coder_workspace_owner.me.id
       "com.coder.user.username"  = data.coder_workspace_owner.me.name
     }
     annotations = {
-      "com.coder.user.email" = data.coder_workspace_owner.me.name_email
+      "com.coder.user.email" = data.coder_workspace_owner.me.email
     }
   }
 

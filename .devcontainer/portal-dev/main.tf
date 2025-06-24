@@ -12,6 +12,7 @@ terraform {
 
 provider "coder" {
 }
+
 data "coder_workspace" "me" {}
 data "coder_workspace_owner" "me" {}
 
@@ -74,7 +75,6 @@ provider "kubernetes" {
   config_path = var.use_kubeconfig == true ? "~/.kube/config" : null
 }
 
-data "coder_workspace" "me" {}
 resource "coder_agent" "main" {
   os                     = "linux"
   arch                   = "amd64"

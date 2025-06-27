@@ -219,7 +219,7 @@ resource "kubernetes_pod" "main" {
     }
     container {
       name              = "portal"
-      image             = "docker.theflyingbirds.net/backstage-dev:latest"
+      image             = "docker.theflyingbirds.net/tfb-services/backstage-dev:latest"
       image_pull_policy = "Always"
       command           = ["sh", "-c", coder_agent.main.init_script]
       port {
